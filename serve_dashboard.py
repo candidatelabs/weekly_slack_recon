@@ -27,6 +27,13 @@ from weekly_slack_recon.enrichment import enrich_submissions
 from weekly_slack_recon.ashby_importer import load_ashby_export, merge_ashby_into_submissions, find_latest_ashby_export
 from weekly_slack_recon.status_check_runner import run_status_check
 from weekly_slack_recon.message_composer import DraftMessage
+from weekly_slack_recon.candidate_outreach import (
+    search_candidates,
+    get_candidate_opportunities,
+    compose_candidate_message,
+    lookup_candidate_email,
+    send_email_via_gmail,
+)
 
 # Cached SlackAPI instance for follow-up sends
 _slack_instance: SlackAPI = None
@@ -120,6 +127,8 @@ class DashboardRequestHandler(http.server.SimpleHTTPRequestHandler):
             self.handle_api_status_check_status()
         elif parsed_path.path == '/api/status-check/drafts':
             self.handle_api_status_check_drafts()
+        elif parsed_path.path == '/api/candidate-outreach/search':
+            self.handle_api_candidate_outreach_search()
         else:
             # Serve static files
             super().do_GET()
@@ -147,6 +156,12 @@ class DashboardRequestHandler(http.server.SimpleHTTPRequestHandler):
             self.handle_api_status_check_generate()
         elif parsed_path.path == '/api/status-check/approve':
             self.handle_api_status_check_approve()
+        elif parsed_path.path == '/api/candidate-outreach/compose':
+            self.handle_api_candidate_outreach_compose()
+        elif parsed_path.path == '/api/candidate-outreach/lookup-email':
+            self.handle_api_candidate_outreach_lookup_email()
+        elif parsed_path.path == '/api/candidate-outreach/send-email':
+            self.handle_api_candidate_outreach_send_email()
         else:
             self.send_error(404)
 
@@ -653,6 +668,17 @@ class DashboardRequestHandler(http.server.SimpleHTTPRequestHandler):
             self.wfile.write(json.dumps({"error": "cookie is required"}).encode())
             return
 
+        # Auto-detect format:
+        # • Full cookie header  → "ashby_session_token=xxx; other=yyy"  (pass as-is)
+        # • Bare token value    → "eyJ..." or "s%3A..."                  (wrap it)
+        # Heuristic: if the input already contains "ashby_session_token" or has
+        # multiple "name=value" pairs (semicolons), treat as full header.
+        if "ashby_session_token" not in cookie and ";" not in cookie:
+            # Assume the user pasted just the raw token value; wrap it so
+            # createSessionFromCookieHeader() can find it.
+            cookie = f"ashby_session_token={cookie}"
+            print(f"[ASHBY] Detected bare token value; wrapped as ashby_session_token=...")
+
         try:
             # 1. Save the cookie using the auth-cookie CLI command
             auth_cmd = [
@@ -833,6 +859,152 @@ class DashboardRequestHandler(http.server.SimpleHTTPRequestHandler):
         self.send_header('Content-Type', 'application/json')
         self.end_headers()
         self.wfile.write(json.dumps({"ok": True, "sent": sent, "errors": errors}).encode())
+
+
+    # ── Candidate Outreach endpoints ──────────────────────────────────────────
+
+    def handle_api_candidate_outreach_search(self):
+        """Return candidate names matching a search query."""
+        parsed = urlparse(self.path)
+        params = parse_qs(parsed.query)
+        query = params.get("q", [""])[0].strip()
+
+        json_path = str(DIRECTORY / "weekly_slack_reconciliation.json")
+        try:
+            results = search_candidates(query, json_path)
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.end_headers()
+            self.wfile.write(json.dumps({"candidates": results}).encode())
+        except Exception as e:
+            self.send_response(500)
+            self.send_header("Content-Type", "application/json")
+            self.end_headers()
+            self.wfile.write(json.dumps({"error": str(e)}).encode())
+
+    def handle_api_candidate_outreach_compose(self):
+        """Compose a candidate check-in email from pipeline data."""
+        content_length = int(self.headers.get("Content-Length", 0))
+        body = self.rfile.read(content_length).decode("utf-8")
+        try:
+            payload = json.loads(body) if body else {}
+        except Exception:
+            self.send_response(400)
+            self.send_header("Content-Type", "application/json")
+            self.end_headers()
+            self.wfile.write(json.dumps({"error": "Invalid JSON"}).encode())
+            return
+
+        candidate_name = (payload.get("candidate_name") or "").strip()
+        if not candidate_name:
+            self.send_response(400)
+            self.send_header("Content-Type", "application/json")
+            self.end_headers()
+            self.wfile.write(json.dumps({"error": "candidate_name is required"}).encode())
+            return
+
+        json_path = str(DIRECTORY / "weekly_slack_reconciliation.json")
+        try:
+            opportunities = get_candidate_opportunities(candidate_name, json_path)
+            first_name = candidate_name.strip().split()[0]
+            message = compose_candidate_message(first_name, opportunities)
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.end_headers()
+            self.wfile.write(json.dumps({
+                "first_name": first_name,
+                "message": message,
+                "opportunities": opportunities,
+            }).encode())
+        except Exception as e:
+            traceback.print_exc()
+            self.send_response(500)
+            self.send_header("Content-Type", "application/json")
+            self.end_headers()
+            self.wfile.write(json.dumps({"error": str(e)}).encode())
+
+    def handle_api_candidate_outreach_lookup_email(self):
+        """Try to find a candidate's email address from Gmail history."""
+        content_length = int(self.headers.get("Content-Length", 0))
+        body = self.rfile.read(content_length).decode("utf-8")
+        try:
+            payload = json.loads(body) if body else {}
+        except Exception:
+            self.send_response(400)
+            self.send_header("Content-Type", "application/json")
+            self.end_headers()
+            self.wfile.write(json.dumps({"error": "Invalid JSON"}).encode())
+            return
+
+        candidate_name = (payload.get("candidate_name") or "").strip()
+        if not candidate_name:
+            self.send_response(400)
+            self.send_header("Content-Type", "application/json")
+            self.end_headers()
+            self.wfile.write(json.dumps({"error": "candidate_name is required"}).encode())
+            return
+
+        try:
+            cfg = load_config()
+            email = lookup_candidate_email(
+                candidate_name,
+                cfg.gmail_credentials_path,
+                cfg.gmail_token_path,
+            )
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.end_headers()
+            self.wfile.write(json.dumps({"email": email}).encode())
+        except Exception as e:
+            traceback.print_exc()
+            self.send_response(500)
+            self.send_header("Content-Type", "application/json")
+            self.end_headers()
+            self.wfile.write(json.dumps({"error": str(e)}).encode())
+
+    def handle_api_candidate_outreach_send_email(self):
+        """Send an email to a candidate directly via the Gmail API."""
+        content_length = int(self.headers.get("Content-Length", 0))
+        body = self.rfile.read(content_length).decode("utf-8")
+        try:
+            payload = json.loads(body) if body else {}
+        except Exception:
+            self.send_response(400)
+            self.send_header("Content-Type", "application/json")
+            self.end_headers()
+            self.wfile.write(json.dumps({"error": "Invalid JSON"}).encode())
+            return
+
+        to      = (payload.get("to") or "").strip()
+        subject = (payload.get("subject") or "").strip()
+        message = (payload.get("message") or "").strip()
+
+        if not to or not message:
+            self.send_response(400)
+            self.send_header("Content-Type", "application/json")
+            self.end_headers()
+            self.wfile.write(json.dumps({"error": "to and message are required"}).encode())
+            return
+
+        try:
+            cfg = load_config()
+            result = send_email_via_gmail(
+                to=to,
+                subject=subject or "Checking in on your interviews",
+                body=message,
+                credentials_path=cfg.gmail_credentials_path,
+                token_path=cfg.gmail_token_path,
+            )
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.end_headers()
+            self.wfile.write(json.dumps(result).encode())
+        except Exception as e:
+            traceback.print_exc()
+            self.send_response(500)
+            self.send_header("Content-Type", "application/json")
+            self.end_headers()
+            self.wfile.write(json.dumps({"error": str(e)}).encode())
 
 
     def handle_api_ashby_sync(self):

@@ -76,16 +76,20 @@ CLIENT_CONTACT_MAP={}                        # Optional: {"Agave": "Akshay"} for
 Create a Slack app at https://api.slack.com/apps with these **User Token Scopes**:
 `channels:read`, `groups:read`, `channels:history`, `groups:history`, `users:read`, `users:read.email`, `reactions:read`, `chat:write`
 
-### 4. Google OAuth setup (for Check-Ins tab)
+### 4. Google OAuth setup (for Check-Ins + Candidate Outreach)
 
-Required once to enable Gmail and Calendar access for the Check-Ins agent.
+Required once to enable Gmail and Calendar access.
 
 1. Go to [console.cloud.google.com](https://console.cloud.google.com) → create a project
 2. Enable **Gmail API** and **Google Calendar API**
-3. OAuth consent screen → add scopes: `gmail.readonly`, `calendar.readonly`
+3. OAuth consent screen → add scopes: `gmail.readonly`, `gmail.send`, `calendar.readonly`
 4. Credentials → Create OAuth 2.0 Client ID → **Desktop app** → Download JSON
 5. Save the downloaded file as `credentials.json` in the project root
-6. First time you click **Generate Check-Ins**, a browser window will open for one-time authorization. Tokens are then cached to `gmail_token.json` and `gcal_token.json` automatically.
+6. Tokens are auto-created on first use:
+   - `gmail_token.json` — read access (Check-Ins, email lookup)
+   - `gmail_send_token.json` — send access (Candidate Outreach)
+   - `gcal_token.json` — Calendar access (Check-Ins)
+7. Each token triggers a one-time browser authorization when first used; subsequent runs use the cached token.
 
 ---
 
@@ -162,8 +166,10 @@ Ashby data is extracted via the **Ashby Automation** tool at `~/Desktop/Ashby au
 **Getting a fresh Ashby session cookie:**
 1. Open `app.ashbyhq.com` in Chrome → sign in
 2. DevTools → Application → Cookies → `app.ashbyhq.com`
-3. Copy value of the `sessionToken` cookie
+3. Copy the **Value** of the `ashby_session_token` cookie (or `sessionToken` if that's what you see)
 4. Paste into the banner and click **Save & Sync**
+
+> The dashboard auto-detects whether you pasted a bare token value or a full cookie header — either format works.
 
 **DK filter:** Only candidates where `creditedTo` is `David`, `David Kimball`, `David CL`, or `DK` are imported.
 
@@ -177,8 +183,41 @@ Ashby data is extracted via the **Ashby Automation** tool at `~/Desktop/Ashby au
 - **Channel filter**: All `candidatelabs-*` channels shown as clean client names
 - **Source filter**: All / Slack only / Ashby only
 - **Search**: Candidate name, company, job title
+- **Click candidate name**: Clicking any name in the table instantly filters to that candidate and reveals the **✉ Email** button
 - **Thread panel**: Click "View Thread" to open the full Slack conversation with inline reply and `@mention` autocomplete
 - **AI enrichment**: "Enrich with AI" generates Claude-powered bullet-point summaries for active Slack candidates
+
+### Candidate Outreach
+
+Send a personalised check-in email to a candidate about all of their active (and closed) opportunities — directly from the dashboard, without switching apps.
+
+**Workflow:**
+1. Type a name in **Search Candidate** (or click the name in the table)
+2. A **✉ Email [Name]** button appears — if multiple people share the same first name, a dropdown lets you pick the right one
+3. Click the button → compose panel opens pre-populated with:
+   - **To:** field (blank by default; click **Look up from Gmail** to auto-fill from past Gmail threads)
+   - **Subject:** `Checking in on your interviews`
+   - **Message:** personalised template listing every active and closed opportunity with its current stage
+4. Edit the message freely, then click **Send Email** → sent directly via Gmail API (no native mail app)
+
+**Pre-populated message format:**
+```
+Hi [First Name],
+
+I just wanted to check in with you to see how your interviews are coming along.
+Here are the latest updates I have on each opportunity below:
+
+• Company A — Technical Screen
+• Company B — Second Round
+• Company C — no longer moving forward
+
+Let me know if you have any questions along the way!
+
+Best,
+DK
+```
+
+> **Note:** The first time you click **Send Email**, a browser tab will open for a one-time Gmail send authorization. The token is then cached to `gmail_send_token.json` for all future sends.
 
 ### Check-Ins tab
 
@@ -240,7 +279,8 @@ weekly_slack_recon/
     ├── calendar_client.py      # Google Calendar API — search interview events
     ├── status_synthesizer.py   # Claude-powered per-candidate status reasoning (Ashby-first priority)
     ├── message_composer.py     # Claude-powered check-in message drafting (formats synthesized one-liners)
-    └── status_check_runner.py  # Check-Ins orchestrator
+    ├── status_check_runner.py  # Check-Ins orchestrator
+    └── candidate_outreach.py   # Candidate email outreach: opportunity lookup, message compose, Gmail send
 ```
 
 ### API endpoints
@@ -266,6 +306,10 @@ weekly_slack_recon/
 | GET | `/api/status-check/drafts` | Fetch all drafted messages |
 | PUT | `/api/status-check/drafts/:id` | Edit draft message or mark skipped |
 | POST | `/api/status-check/approve` | Approve and post one or all drafts |
+| GET | `/api/candidate-outreach/search` | Search candidates by name |
+| POST | `/api/candidate-outreach/compose` | Compose candidate check-in email from pipeline data |
+| POST | `/api/candidate-outreach/lookup-email` | Look up candidate email from Gmail history |
+| POST | `/api/candidate-outreach/send-email` | Send email directly via Gmail API |
 
 ---
 

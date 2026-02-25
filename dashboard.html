@@ -1459,6 +1459,192 @@
             padding: 60px 20px;
             font-size: 15px;
         }
+
+        /* ── Clickable candidate name ───────────────────────────────────────── */
+        .candidate-name-link {
+            cursor: pointer;
+        }
+        .candidate-name-link:hover {
+            color: #4a90e2;
+            text-decoration: underline;
+        }
+
+        /* ── Candidate Outreach compose overlay ─────────────────────────────── */
+        #outreach-email-btn {
+            padding: 7px 14px;
+            background: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            align-self: flex-end;
+            margin-bottom: 2px;
+        }
+        #outreach-email-btn:hover { background: #357abd; }
+
+        .compose-overlay-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.35);
+            z-index: 1100;
+        }
+        .compose-overlay-backdrop.open { display: block; }
+
+        .compose-panel {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+            width: 580px;
+            max-width: 95vw;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            z-index: 1101;
+        }
+        .compose-panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            border-bottom: 1px solid #e9ecef;
+            background: #f8f9fa;
+            border-radius: 12px 12px 0 0;
+        }
+        .compose-panel-header h3 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+        .compose-close-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            line-height: 1;
+            color: #888;
+            cursor: pointer;
+            padding: 2px 6px;
+        }
+        .compose-close-btn:hover { color: #333; }
+
+        .compose-panel-body {
+            padding: 18px 20px;
+            overflow-y: auto;
+            flex: 1;
+        }
+        .compose-field {
+            margin-bottom: 14px;
+        }
+        .compose-field label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            margin-bottom: 5px;
+        }
+        .compose-field-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .compose-field input[type="email"],
+        .compose-field input[type="text"] {
+            flex: 1;
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+        .compose-field input:focus {
+            outline: none;
+            border-color: #4a90e2;
+        }
+        .compose-lookup-btn {
+            padding: 7px 12px;
+            background: none;
+            border: 1px solid #4a90e2;
+            border-radius: 5px;
+            color: #4a90e2;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .compose-lookup-btn:hover { background: #eef5fd; }
+        .compose-lookup-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .compose-opportunities {
+            background: #f8f9fa;
+            border-radius: 6px;
+            padding: 10px 14px;
+            margin-bottom: 14px;
+            font-size: 13px;
+            line-height: 1.7;
+            color: #444;
+        }
+        .compose-opp-active { color: #2c7a2c; }
+        .compose-opp-closed { color: #999; text-decoration: line-through; }
+
+        .compose-panel-body textarea {
+            width: 100%;
+            min-height: 220px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 13px;
+            font-family: inherit;
+            line-height: 1.55;
+            resize: vertical;
+            box-sizing: border-box;
+        }
+        .compose-panel-body textarea:focus {
+            outline: none;
+            border-color: #4a90e2;
+        }
+
+        .compose-panel-footer {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 10px;
+            padding: 14px 20px;
+            border-top: 1px solid #e9ecef;
+            background: #f8f9fa;
+            border-radius: 0 0 12px 12px;
+        }
+        .compose-send-btn {
+            padding: 9px 20px;
+            background: #2ca02c;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .compose-send-btn:hover:not(:disabled) { background: #248a24; }
+        .compose-send-btn:disabled { background: #ccc; cursor: not-allowed; }
+        .compose-cancel-btn {
+            padding: 9px 16px;
+            background: none;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #666;
+            cursor: pointer;
+        }
+        .compose-cancel-btn:hover { border-color: #aaa; }
     </style>
 </head>
 <body>
@@ -1498,8 +1684,8 @@
             <p>The Ashby session cookie has expired. Paste a fresh one below to re-authenticate and sync your pipeline.</p>
             <ol>
                 <li>Open <strong>app.ashbyhq.com</strong> in Chrome and sign in</li>
-                <li>Open DevTools → Application → Cookies → <code>app.ashbyhq.com</code></li>
-                <li>Copy the value of the <code>sessionToken</code> cookie</li>
+                <li>Open DevTools → <strong>Application</strong> → Cookies → <code>app.ashbyhq.com</code></li>
+                <li>Copy the <strong>Value</strong> of the <code>ashby_session_token</code> cookie (or <code>sessionToken</code> if that's what you see)</li>
                 <li>Paste it below and click <strong>Save &amp; Sync</strong></li>
             </ol>
             <div class="ashby-cookie-row">
@@ -1597,6 +1783,17 @@
                 <label>Search Candidate</label>
                 <input type="text" id="search" placeholder="Search by name, company, or job…">
             </div>
+            <div id="outreach-email-wrap" style="display:none; position:relative; align-self:flex-end;">
+                <button id="outreach-email-btn" onclick="outreachBtnClick()">
+                    ✉ Email <span id="outreach-email-name"></span>
+                </button>
+                <!-- Dropdown for when multiple people share the search term -->
+                <div id="outreach-name-dropdown" style="
+                    display:none; position:absolute; top:100%; right:0; margin-top:4px;
+                    background:white; border:1px solid #ddd; border-radius:6px;
+                    box-shadow:0 4px 12px rgba(0,0,0,0.12); min-width:200px; z-index:200;
+                "></div>
+            </div>
         </div>
 
         <div class="table-container">
@@ -1654,6 +1851,38 @@
         </div><!-- end tab-pane checkin -->
 
     </div><!-- end container -->
+
+    <!-- Candidate Outreach compose overlay -->
+    <div class="compose-overlay-backdrop" id="compose-backdrop" onclick="closeCompose()"></div>
+    <div class="compose-panel" id="compose-panel" style="display:none">
+        <div class="compose-panel-header">
+            <h3>✉ Email <span id="compose-candidate-name"></span></h3>
+            <button class="compose-close-btn" onclick="closeCompose()">✕</button>
+        </div>
+        <div class="compose-panel-body">
+            <div class="compose-field">
+                <label>To</label>
+                <div class="compose-field-row">
+                    <input type="email" id="compose-email-to"
+                           placeholder="Enter candidate email address…" />
+                    <button class="compose-lookup-btn" id="compose-lookup-btn"
+                            onclick="lookupCandidateEmail()">Look up from Gmail</button>
+                </div>
+            </div>
+            <div class="compose-field">
+                <label>Subject</label>
+                <input type="text" id="compose-subject"
+                       value="Checking in on your interviews" />
+            </div>
+            <div class="compose-opportunities" id="compose-opportunities"></div>
+            <textarea id="compose-message"></textarea>
+        </div>
+        <div class="compose-panel-footer">
+            <button class="compose-cancel-btn" onclick="closeCompose()">Cancel</button>
+            <button class="compose-send-btn" id="compose-send-btn"
+                    onclick="sendCandidateEmail()">Send Email</button>
+        </div>
+    </div>
 
     <!-- Sticky bottom bar -->
     <div class="followup-bar" id="followup-bar">
@@ -1835,6 +2064,27 @@
                 return true;
             });
 
+            // Show "✉ Email" button when search is active and returns ≥1 candidate name
+            const emailWrap = document.getElementById('outreach-email-wrap');
+            const emailNameSpan = document.getElementById('outreach-email-name');
+            if (searchTerm && filteredData.length > 0) {
+                const names = [...new Set(filteredData.map(s => s.candidate_name).filter(Boolean))];
+                if (names.length === 1) {
+                    emailNameSpan.textContent = names[0];
+                    emailWrap.style.display = '';
+                    emailWrap._names = names;
+                } else if (names.length > 1) {
+                    emailNameSpan.textContent = 'Candidate ▾';
+                    emailWrap.style.display = '';
+                    emailWrap._names = names;
+                } else {
+                    emailWrap.style.display = 'none';
+                }
+            } else {
+                emailWrap.style.display = 'none';
+                document.getElementById('outreach-name-dropdown').style.display = 'none';
+            }
+
             sortData();
             renderTable();
         }
@@ -1899,7 +2149,7 @@
                     const aiCell = renderAiStatusCell(submission);
 
                     // ── Candidate cell ─────────────────────────────────────
-                    let candidateHtml = `<strong>${escapeHtml(submission.candidate_name)}</strong>`;
+                    let candidateHtml = `<strong class="candidate-name-link" title="Filter to this candidate" onclick="filterToCandidate('${escapeHtml(submission.candidate_name)}')">${escapeHtml(submission.candidate_name)}</strong>`;
                     if (isAshby) {
                         candidateHtml += `<span class="source-badge source-badge-ashby" title="From Ashby ATS">Ashby</span>`;
                     }
@@ -3318,6 +3568,185 @@
                 .replace(/</g, '&lt;')
                 .replace(/>/g, '&gt;')
                 .replace(/"/g, '&quot;');
+        }
+
+        // ── Click candidate name to filter ───────────────────────────────────
+        function filterToCandidate(name) {
+            const searchInput = document.getElementById('search');
+            searchInput.value = name;
+            applyFilters();
+            searchInput.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // ── Candidate Outreach compose ────────────────────────────────────────
+
+        let _composeCurrentName = '';
+
+        function outreachBtnClick() {
+            const wrap = document.getElementById('outreach-email-wrap');
+            const names = wrap._names || [];
+            if (names.length === 1) {
+                openCandidateCompose(names[0]);
+            } else {
+                toggleNameDropdown(names);
+            }
+        }
+
+        function toggleNameDropdown(names) {
+            const dd = document.getElementById('outreach-name-dropdown');
+            if (dd.style.display !== 'none') {
+                dd.style.display = 'none';
+                return;
+            }
+            dd.innerHTML = names.map(n =>
+                `<div onclick="nameDropdownSelect('${escapeHtml(n)}')" style="
+                    padding:9px 14px; cursor:pointer; font-size:13px;
+                    border-bottom:1px solid #f0f0f0;
+                " onmouseover="this.style.background='#f5f5f5'"
+                   onmouseout="this.style.background=''">${escapeHtml(n)}</div>`
+            ).join('');
+            dd.style.display = 'block';
+        }
+
+        function nameDropdownSelect(name) {
+            document.getElementById('outreach-name-dropdown').style.display = 'none';
+            openCandidateCompose(name);
+        }
+
+        // Close dropdown when clicking elsewhere
+        document.addEventListener('click', (e) => {
+            const wrap = document.getElementById('outreach-email-wrap');
+            if (wrap && !wrap.contains(e.target)) {
+                document.getElementById('outreach-name-dropdown').style.display = 'none';
+            }
+        });
+
+        async function openCandidateCompose(name) {
+            if (!name) return;
+            name = name.trim();
+            _composeCurrentName = name;
+
+            document.getElementById('compose-candidate-name').textContent = name;
+            document.getElementById('compose-email-to').value = '';
+            document.getElementById('compose-subject').value = 'Checking in on your interviews';
+            document.getElementById('compose-message').value = 'Loading…';
+            document.getElementById('compose-opportunities').innerHTML = '';
+            document.getElementById('compose-send-btn').disabled = true;
+            document.getElementById('compose-send-btn').textContent = 'Send Email';
+
+            // Show panel
+            document.getElementById('compose-panel').style.display = 'flex';
+            document.getElementById('compose-backdrop').classList.add('open');
+
+            try {
+                const resp = await fetch('/api/candidate-outreach/compose', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ candidate_name: name }),
+                });
+                const data = await resp.json();
+                if (!resp.ok) throw new Error(data.error || 'Server error');
+
+                document.getElementById('compose-message').value = data.message || '';
+                renderComposeOpportunities(data.opportunities || []);
+                document.getElementById('compose-send-btn').disabled = false;
+            } catch (err) {
+                document.getElementById('compose-message').value = '';
+                document.getElementById('compose-opportunities').innerHTML =
+                    `<span style="color:#c0392b">Error: ${escapeHtml(err.message)}</span>`;
+                document.getElementById('compose-send-btn').disabled = false;
+            }
+        }
+
+        function renderComposeOpportunities(opportunities) {
+            const el = document.getElementById('compose-opportunities');
+            if (!opportunities.length) {
+                el.innerHTML = '<em>No opportunities found.</em>';
+                return;
+            }
+            const rows = opportunities.map(opp => {
+                const cls = opp.is_active ? 'compose-opp-active' : 'compose-opp-closed';
+                const detail = opp.is_active
+                    ? (opp.stage || 'in process')
+                    : 'no longer moving forward';
+                return `<span class="${cls}">• ${escapeHtml(opp.company)} — ${escapeHtml(detail)}</span>`;
+            });
+            el.innerHTML = rows.join('<br>');
+        }
+
+        function closeCompose() {
+            document.getElementById('compose-panel').style.display = 'none';
+            document.getElementById('compose-backdrop').classList.remove('open');
+            _composeCurrentName = '';
+        }
+
+        async function lookupCandidateEmail() {
+            const btn = document.getElementById('compose-lookup-btn');
+            btn.disabled = true;
+            btn.textContent = 'Looking up…';
+            try {
+                const resp = await fetch('/api/candidate-outreach/lookup-email', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ candidate_name: _composeCurrentName }),
+                });
+                const data = await resp.json();
+                if (data.email) {
+                    document.getElementById('compose-email-to').value = data.email;
+                    btn.textContent = 'Found!';
+                } else {
+                    btn.textContent = 'Not found';
+                }
+            } catch (err) {
+                btn.textContent = 'Error';
+            }
+            setTimeout(() => {
+                btn.disabled = false;
+                btn.textContent = 'Look up from Gmail';
+            }, 2500);
+        }
+
+        async function sendCandidateEmail() {
+            const to      = document.getElementById('compose-email-to').value.trim();
+            const subject = document.getElementById('compose-subject').value.trim();
+            const message = document.getElementById('compose-message').value;
+            const btn     = document.getElementById('compose-send-btn');
+
+            if (!to) {
+                document.getElementById('compose-email-to').focus();
+                document.getElementById('compose-email-to').style.borderColor = '#c0392b';
+                return;
+            }
+            document.getElementById('compose-email-to').style.borderColor = '';
+
+            btn.disabled = true;
+            btn.textContent = 'Sending…';
+
+            try {
+                const resp = await fetch('/api/candidate-outreach/send-email', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ to, subject, message }),
+                });
+                const data = await resp.json();
+                if (!resp.ok) throw new Error(data.error || 'Server error');
+
+                btn.textContent = '✓ Sent!';
+                btn.style.background = '#2ca02c';
+                setTimeout(() => closeCompose(), 1800);
+            } catch (err) {
+                btn.disabled = false;
+                btn.textContent = 'Send Email';
+                // Show error inline above the textarea
+                let errEl = document.getElementById('compose-send-error');
+                if (!errEl) {
+                    errEl = document.createElement('div');
+                    errEl.id = 'compose-send-error';
+                    errEl.style.cssText = 'color:#c0392b;font-size:12px;margin-bottom:8px;';
+                    document.getElementById('compose-message').before(errEl);
+                }
+                errEl.textContent = 'Error: ' + err.message;
+            }
         }
     </script>
 </body>

@@ -42,6 +42,7 @@ nudge.log
 # Google OAuth credentials and cached tokens (secrets)
 credentials.json
 gmail_token.json
+gmail_send_token.json
 gcal_token.json
 
 # Generated data files (runtime state)
