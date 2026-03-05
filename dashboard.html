@@ -1681,20 +1681,33 @@
         <!-- Ashby re-auth banner: shown when session cookie has expired -->
         <div class="ashby-auth-banner" id="ashby-auth-banner">
             <h3>🔒 Ashby session expired</h3>
-            <p>The Ashby session cookie has expired. Paste a fresh one below to re-authenticate and sync your pipeline.</p>
-            <ol>
-                <li>Open <strong>app.ashbyhq.com</strong> in Chrome and sign in</li>
-                <li>Open DevTools → <strong>Application</strong> → Cookies → <code>app.ashbyhq.com</code></li>
-                <li>Copy the <strong>Value</strong> of the <code>ashby_session_token</code> cookie (or <code>sessionToken</code> if that's what you see)</li>
-                <li>Paste it below and click <strong>Save &amp; Sync</strong></li>
-            </ol>
-            <div class="ashby-cookie-row">
-                <input type="password" class="ashby-cookie-input" id="ashby-cookie-input"
-                    placeholder="Paste Ashby session cookie value…"
-                    onkeydown="if(event.key==='Enter') submitAshbyCookie()">
-                <button class="ashby-cookie-submit" id="ashby-cookie-submit"
-                    onclick="submitAshbyCookie()">Save &amp; Sync</button>
+            <p>The Ashby session cookie has expired. Click below to open a login window, or paste a cookie manually.</p>
+
+            <div style="margin-bottom: 12px;">
+                <button class="ashby-cookie-submit" id="ashby-login-btn"
+                    onclick="launchAshbyLogin()"
+                    style="background: #1565c0; padding: 8px 20px; font-size: 14px;">
+                    Open Ashby Login
+                </button>
+                <span id="ashby-login-status" style="font-size: 13px; margin-left: 10px; color: #555;"></span>
             </div>
+
+            <details style="margin-top: 8px;">
+                <summary style="cursor: pointer; font-size: 13px; color: #6d4c41;">Manual: paste cookie from DevTools</summary>
+                <ol style="margin-top: 8px;">
+                    <li>Open <strong>app.ashbyhq.com</strong> in Chrome and sign in</li>
+                    <li>Open DevTools → <strong>Application</strong> → Cookies → <code>app.ashbyhq.com</code></li>
+                    <li>Copy the <strong>Value</strong> of the <code>ashby_session_token</code> cookie (or <code>sessionToken</code> if that's what you see)</li>
+                    <li>Paste it below and click <strong>Save &amp; Sync</strong></li>
+                </ol>
+                <div class="ashby-cookie-row">
+                    <input type="password" class="ashby-cookie-input" id="ashby-cookie-input"
+                        placeholder="Paste Ashby session cookie value…"
+                        onkeydown="if(event.key==='Enter') submitAshbyCookie()">
+                    <button class="ashby-cookie-submit" id="ashby-cookie-submit"
+                        onclick="submitAshbyCookie()">Save &amp; Sync</button>
+                </div>
+            </details>
             <div class="ashby-auth-status" id="ashby-auth-status"></div>
         </div>
 
@@ -2521,6 +2534,31 @@
                 banner.classList.add('visible');
             } else {
                 banner.classList.remove('visible');
+            }
+        }
+
+        async function launchAshbyLogin() {
+            const btn = document.getElementById('ashby-login-btn');
+            const statusEl = document.getElementById('ashby-login-status');
+            btn.disabled = true;
+            statusEl.textContent = 'Opening browser window...';
+            statusEl.style.color = '#555';
+
+            try {
+                const response = await fetch('/api/ashby/login', { method: 'POST' });
+                const result = await response.json();
+                if (response.ok && result.ok) {
+                    statusEl.textContent = 'Browser opened — log in with Google, then close the window. Click "Sync Ashby" after.';
+                    statusEl.style.color = '#1565c0';
+                } else {
+                    statusEl.textContent = `Error: ${result.error || 'Unknown error'}`;
+                    statusEl.style.color = '#c62828';
+                }
+            } catch (err) {
+                statusEl.textContent = `Error: ${err.message}`;
+                statusEl.style.color = '#c62828';
+            } finally {
+                btn.disabled = false;
             }
         }
 

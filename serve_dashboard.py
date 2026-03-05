@@ -150,6 +150,8 @@ class DashboardRequestHandler(http.server.SimpleHTTPRequestHandler):
             self.handle_api_ashby_import()
         elif parsed_path.path == '/api/ashby/set-cookie':
             self.handle_api_ashby_set_cookie()
+        elif parsed_path.path == '/api/ashby/login':
+            self.handle_api_ashby_login()
         elif parsed_path.path == '/api/ashby/sync':
             self.handle_api_ashby_sync()
         elif parsed_path.path == '/api/status-check/generate':
@@ -644,6 +646,36 @@ class DashboardRequestHandler(http.server.SimpleHTTPRequestHandler):
             self.send_header("Content-Type", "application/json")
             self.end_headers()
             self.wfile.write(json.dumps({"error": str(e)}).encode())
+        except Exception as e:
+            traceback.print_exc()
+            self.send_response(500)
+            self.send_header("Content-Type", "application/json")
+            self.end_headers()
+            self.wfile.write(json.dumps({"error": str(e)}).encode())
+
+    def handle_api_ashby_login(self):
+        """Launch Playwright browser for Ashby SSO login."""
+        try:
+            auth_cmd = [
+                "node", "--loader", "ts-node/esm",
+                "src/cli.ts", "auth",
+            ]
+            # Launch in background — opens a Chrome window for the user
+            proc = subprocess.Popen(
+                auth_cmd,
+                cwd=str(ASHBY_AUTOMATION_DIR),
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+            )
+            print(f"[ASHBY] Launched Playwright auth (pid={proc.pid}). User should log in and close the browser.")
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.end_headers()
+            self.wfile.write(json.dumps({
+                "ok": True,
+                "message": "Browser window opened. Log in with Google, then close the browser window.",
+                "pid": proc.pid,
+            }).encode())
         except Exception as e:
             traceback.print_exc()
             self.send_response(500)

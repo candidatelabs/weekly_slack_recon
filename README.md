@@ -160,14 +160,14 @@ Ashby data is extracted via the **Ashby Automation** tool at `~/Desktop/Ashby au
 **Sync Ashby button:**
 1. Runs `node src/cli.ts extract` to generate a fresh JSON export
 2. Imports DK-only candidates and merges into the dashboard
-3. If session expired → cookie prompt appears inline in the dashboard
-4. Paste a fresh `sessionToken` cookie → server re-auths, re-extracts, re-imports
+3. If session expired → re-auth banner appears inline in the dashboard
 
-**Getting a fresh Ashby session cookie:**
-1. Open `app.ashbyhq.com` in Chrome → sign in
-2. DevTools → Application → Cookies → `app.ashbyhq.com`
-3. Copy the **Value** of the `ashby_session_token` cookie (or `sessionToken` if that's what you see)
-4. Paste into the banner and click **Save & Sync**
+**Re-authenticating when session expires:**
+
+The dashboard offers two methods when the Ashby session cookie expires:
+
+1. **Open Ashby Login** (recommended) — click the button in the banner to launch a Playwright browser window. Log in via Google SSO, then close the window. The session is saved automatically. Click "Sync Ashby" after.
+2. **Manual cookie paste** (fallback) — expand the manual section, copy `ashby_session_token` from DevTools → Application → Cookies → `app.ashbyhq.com`, and paste it in. Note: cookies expire quickly, so run sync immediately after pasting.
 
 > The dashboard auto-detects whether you pasted a bare token value or a full cookie header — either format works.
 
@@ -301,6 +301,7 @@ weekly_slack_recon/
 | GET | `/api/ashby/sync/status` | Poll Ashby sync progress |
 | POST | `/api/ashby/import` | Import existing Ashby JSON (no extraction) |
 | POST | `/api/ashby/set-cookie` | Save session cookie, re-extract, re-import |
+| POST | `/api/ashby/login` | Launch Playwright browser for Ashby SSO login |
 | POST | `/api/status-check/generate` | Start Check-Ins pipeline (background) |
 | GET | `/api/status-check/status` | Poll Check-Ins pipeline progress |
 | GET | `/api/status-check/drafts` | Fetch all drafted messages |
