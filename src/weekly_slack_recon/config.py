@@ -13,7 +13,7 @@ from dotenv import load_dotenv
 class Config:
     slack_bot_token: str
     dk_email: str = "dkimball@candidatelabs.com"
-    lookback_days: int = 30
+    lookback_days: int = 60
     unclear_followup_days: int = 7
     inactivity_days: int = 5
     include_confused_close: bool = False
@@ -75,7 +75,7 @@ def load_config() -> Config:
         except ValueError:
             return default
 
-    lookback_days = _int_env("LOOKBACK_DAYS", 30)
+    lookback_days = _int_env("LOOKBACK_DAYS", 60)
     unclear_followup_days = _int_env("UNCLEAR_FOLLOWUP_DAYS", 7)
     inactivity_days = _int_env("INACTIVITY_DAYS", 5)
 

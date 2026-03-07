@@ -36,7 +36,7 @@ Also requires **Node.js** and the **Ashby Automation** tool at `~/Desktop/Ashby 
 ```env
 SLACK_BOT_TOKEN=xoxp-...            # User OAuth Token from api.slack.com/apps
 DK_EMAIL=dkimball@candidatelabs.com
-LOOKBACK_DAYS=45
+LOOKBACK_DAYS=60
 UNCLEAR_FOLLOWUP_DAYS=7
 INACTIVITY_DAYS=5
 ANTHROPIC_API_KEY=sk-ant-api03-...  # From console.anthropic.com

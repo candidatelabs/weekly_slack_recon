@@ -49,7 +49,7 @@ SLACK_BOT_TOKEN=xoxp-...
 DK_EMAIL=
 
 # How far back to scan Slack for submissions
-LOOKBACK_DAYS=45
+LOOKBACK_DAYS=60
 
 # Thresholds for flagging follow-ups
 UNCLEAR_FOLLOWUP_DAYS=7

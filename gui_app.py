@@ -35,7 +35,7 @@ class ReconciliationGUI:
         self.root.resizable(True, True)
         
         # Configuration variables
-        self.lookback_days = IntVar(value=int(os.getenv("LOOKBACK_DAYS", "30")))
+        self.lookback_days = IntVar(value=int(os.getenv("LOOKBACK_DAYS", "60")))
         self.unclear_followup_days = IntVar(value=int(os.getenv("UNCLEAR_FOLLOWUP_DAYS", "7")))
         self.inactivity_days = IntVar(value=int(os.getenv("INACTIVITY_DAYS", "5")))
         self.include_confused_close = BooleanVar(value=os.getenv("INCLUDE_CONFUSED_CLOSE", "false").lower() in {"1", "true", "yes", "y"})

@@ -43,7 +43,7 @@ async def index():
 async def load_data(
     slack_token: str = Form(None),
     dk_email: str = Form("dkimball@candidatelabs.com"),
-    lookback_days: int = Form(45),
+    lookback_days: int = Form(60),
     unclear_followup_days: int = Form(7),
     inactivity_days: int = Form(5),
     include_confused_close: bool = Form(False),

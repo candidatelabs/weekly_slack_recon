@@ -1,28 +1,32 @@
 # Weekly Slack Pipeline Reconciliation
 
-Generated at: 2026-02-19T19:47:10.681680+00:00
+Generated at: 2026-03-05T21:56:06.794110+00:00
 
 ## candidatelabs-afterquery-engineers
 
 ### CLOSED
 - Zhuoer Wang (:no_entry:)
 - Benjamin Liang (:no_entry:)
-- Edward Point (:no_entry:)
-- Konrad Cheng (:no_entry:)
 
 ### IN PROCESS  explicit
+- Ashutosh sunderesh 
 - Daniel Jubas 
 
 ### IN PROCESS  unclear (needs follow-up)
-- (none)
+- Ray Tang (needs follow-up (submitted 0 days ago))
 
-## candidatelabs-agave-engineering
+## candidatelabs-altara-engineers
 
 ### CLOSED
-- Bryan Shangguan (:no_entry:)
+- Zhuoer Wang (:no_entry:)
+- Puneet Chopra (:no_entry:)
 
 ### IN PROCESS  explicit
-- (none)
+- Justin Jones 
+- Ray Tang 
+- Avi Basnet 
+- Jongho Kim 
+- Aniruddha Lappathi 
 
 ### IN PROCESS  unclear (needs follow-up)
 - (none)
@@ -32,10 +36,9 @@ Generated at: 2026-02-19T19:47:10.681680+00:00
 ### CLOSED
 - Darsh Doshi (:no_entry:)
 - Teja Nanduri (:no_entry:)
-- Bryan Shangguan (:no_entry:)
 
 ### IN PROCESS  explicit
-- Gina Wang 
+- Ray Tang 
 
 ### IN PROCESS  unclear (needs follow-up)
 - (none)
@@ -43,14 +46,10 @@ Generated at: 2026-02-19T19:47:10.681680+00:00
 ## candidatelabs-argus-engineers
 
 ### CLOSED
-- Grace Guo (:no_entry:)
-- Elle Yang (:no_entry:)
-- Rithwik Sudarshan (:no_entry:)
-- Konrad Cheng (:no_entry:)
+- (none)
 
 ### IN PROCESS  explicit
 - Benjamin Franc 
-- Andrew Liang 
 
 ### IN PROCESS  unclear (needs follow-up)
 - (none)
@@ -58,52 +57,42 @@ Generated at: 2026-02-19T19:47:10.681680+00:00
 ## candidatelabs-ashler-engineers
 
 ### CLOSED
+- Seoyoon Jin (:no_entry:)
 - John Piotrowski (:no_entry:)
-- Rithwik Sudarshan (:no_entry:)
 
 ### IN PROCESS  explicit
-- Seoyoon Jin 
+- Ruthvik Mukkamala 
+- William Bang 
+- Sunny Rekhi 
 - Daniel Jubas 
-- Sayan Chaudhry 
-- Konrad Cheng 
 
 ### IN PROCESS  unclear (needs follow-up)
 - (none)
-
-## candidatelabs-assured-engineers
-
-### CLOSED
-- (none)
-
-### IN PROCESS  explicit
-- (none)
-
-### IN PROCESS  unclear (needs follow-up)
-- Bryan Shangguan (needs follow-up (submitted 36 days ago))
 
 ## candidatelabs-athena-engineers
 
 ### CLOSED
+- Zhangqi (James) Luo (:no_entry:)
+- Alex Talyuk (:no_entry:)
 - Pavel Ivanov (:no_entry:)
 
 ### IN PROCESS  explicit
-- Alex Talyuk 
 - Puneet Chopra 
 
 ### IN PROCESS  unclear (needs follow-up)
-- Zhangqi (James) Luo (needs follow-up (submitted 2 days ago))
+- (none)
 
 ## candidatelabs-auctor-engineers
 
 ### CLOSED
 - Siddharth Thiagarajan (:no_entry:)
-- Armaan Hiranandani (:no_entry:)
+- Maanav Agrawal (:no_entry:)
 
 ### IN PROCESS  explicit
-- Maanav Agrawal 
+- Gina Wang 
 
 ### IN PROCESS  unclear (needs follow-up)
-- (none)
+- Tishya Khanna (needs follow-up (submitted 0 days ago))
 
 ## candidatelabs-blackforestlabs
 
@@ -111,18 +100,34 @@ Generated at: 2026-02-19T19:47:10.681680+00:00
 - Amogh Patankar (:no_entry:)
 
 ### IN PROCESS  explicit
+- Angel Lim 
 - Bharadwaj Rallabhandi 
 
 ### IN PROCESS  unclear (needs follow-up)
-- Angel Lim (needs follow-up (submitted 23 days ago))
+- Te-Lin Wu (needs follow-up (submitted 8 days ago))
 
-## candidatelabs-bot-co-engineers
+## candidatelabs-blue-eng
 
 ### CLOSED
-- Veni Johanna (:no_entry:)
+- Anshay Ghosh (:no_entry:)
+- Qian He (:no_entry:)
+- Adam Hutson (:no_entry:)
 
 ### IN PROCESS  explicit
-- (none)
+- Josef Erben 
+- Chirag Nath 
+
+### IN PROCESS  unclear (needs follow-up)
+- Russell Holz (needs follow-up (submitted 0 days ago))
+- Yi Louise L (needs follow-up (submitted 2 days ago))
+
+## candidatelabs-bluejay-eng
+
+### CLOSED
+- Benjamin Franc (:no_entry:)
+
+### IN PROCESS  explicit
+- Angel Lim 
 
 ### IN PROCESS  unclear (needs follow-up)
 - (none)
@@ -141,21 +146,23 @@ Generated at: 2026-02-19T19:47:10.681680+00:00
 ## candidatelabs-canals-engineers
 
 ### CLOSED
+- Sayed Raheel Hussain (:no_entry:)
 - Peter Wang Currier (:no_entry:)
 - Amin Hassani (:no_entry:)
 
 ### IN PROCESS  explicit
+- J 
+- J 
 - Andy Ratsirarson 
 - Leonardo Faria (Canada based) 
 
 ### IN PROCESS  unclear (needs follow-up)
-- J (needs follow-up (submitted 5 days ago))
-- J (needs follow-up (submitted 5 days ago))
+- (none)
 
 ## candidatelabs-causal-labs-climatix-engineers
 
 ### CLOSED
-- (none)
+- Jovan Sardinha (:no_entry:)
 
 ### IN PROCESS  explicit
 - Angel Lim 
@@ -166,15 +173,16 @@ Generated at: 2026-02-19T19:47:10.681680+00:00
 ## candidatelabs-charta-health-fwd
 
 ### CLOSED
+- Tishya Khanna (:no_entry:)
+- Bradley Berman (:no_entry:)
+- Yi Louise L (:no_entry:)
 - Eric Ly (:no_entry:)
-- Rian Atri (:no_entry:)
-- Nischal Chandra (:no_entry:)
+- Amogh Patankar (:no_entry:)
 
 ### IN PROCESS  explicit
+- Gina Wang 
 - Benjamin Franc 
 - Chirag Nath 
-- Yi Louise L 
-- Amogh Patankar 
 - Maanav Agrawal 
 - Liyang Zhou 
 
@@ -184,13 +192,27 @@ Generated at: 2026-02-19T19:47:10.681680+00:00
 ## candidatelabs-chroma-engineers
 
 ### CLOSED
+- Zhangqi (James) Luo (:no_entry:)
 - Chaitanya Manchikanti (:no_entry:)
 
 ### IN PROCESS  explicit
 - Angel Lim 
 
 ### IN PROCESS  unclear (needs follow-up)
-- Zhangqi (James) Luo (needs follow-up (submitted 2 days ago))
+- (none)
+
+## candidatelabs-cleric-engineers
+
+### CLOSED
+- Aditya Sohoni (:no_entry:)
+- Kirtan Delwadia (:no_entry:)
+- Alex Talyuk (:no_entry:)
+
+### IN PROCESS  explicit
+- Pavel Ivanov 
+
+### IN PROCESS  unclear (needs follow-up)
+- (none)
 
 ## candidatelabs-cloudglue-engineers
 
@@ -198,18 +220,19 @@ Generated at: 2026-02-19T19:47:10.681680+00:00
 - Zhangqi (James) Luo (:no_entry:)
 
 ### IN PROCESS  explicit
-- (none)
+- Alex Talyuk 
 
 ### IN PROCESS  unclear (needs follow-up)
-- Alex Talyuk (needs follow-up (submitted 2 days ago))
+- (none)
 
 ## candidatelabs-coderabbit-engineers
 
 ### CLOSED
-- (none)
+- Manny Gundampalli (:no_entry:)
+- Peter Wang Currier (:no_entry:)
 
 ### IN PROCESS  explicit
-- Peter Wang Currier 
+- (none)
 
 ### IN PROCESS  unclear (needs follow-up)
 - (none)
@@ -217,30 +240,30 @@ Generated at: 2026-02-19T19:47:10.681680+00:00
 ## candidatelabs-collegevine-engineers
 
 ### CLOSED
+- Yijia Zhan (:no_entry:)
 - Leonardo Faria (Canada based) (:no_entry:)
 - Leonardo Faria (Canada based) (:no_entry:)
 - Armaan Hiranandani (:no_entry:)
-- Simcha Coleman (:no_entry:)
-- Ayush Singh (:no_entry:)
 
 ### IN PROCESS  explicit
-- Yijia Zhan 
+- Sunny Rekhi 
+- Josef Erben 
+- Russell Holz 
 
 ### IN PROCESS  unclear (needs follow-up)
-- Sunny Rekhi (needs follow-up (submitted 0 days ago))
-- Josef Erben (needs follow-up (submitted 0 days ago))
-- Russell Holz (needs follow-up (submitted 0 days ago))
+- Tishya Khanna (needs follow-up (submitted 0 days ago))
 
 ## candidatelabs-conduit-engineers
 
 ### CLOSED
-- Scott Draves (:no_entry:)
+- Ashwin Pathi (:no_entry:)
 
 ### IN PROCESS  explicit
-- Ashwin Pathi 
+- Kaiden Brown 
+- Maxwell Siegelman 
+- Te-Lin Wu 
+- Jovan Sardinha 
 - Angel Lim 
-- Konrad Cheng 
-- Andrew Liang 
 
 ### IN PROCESS  unclear (needs follow-up)
 - (none)
@@ -248,34 +271,22 @@ Generated at: 2026-02-19T19:47:10.681680+00:00
 ## candidatelabs-context-engineers
 
 ### CLOSED
+- Maanav Agrawal (:no_entry:)
 - Darsh Doshi (:no_entry:)
-- Elle Yang (:no_entry:)
-- Gina Wang (:no_entry:)
 
 ### IN PROCESS  explicit
 - (none)
 
 ### IN PROCESS  unclear (needs follow-up)
-- Maanav Agrawal (needs follow-up (submitted 0 days ago))
-
-## candidatelabs-create-anything-engineers
-
-### CLOSED
-- Bharadwaj Rallabhandi (:no_entry:)
-
-### IN PROCESS  explicit
-- Chaitanya Manchikanti 
-
-### IN PROCESS  unclear (needs follow-up)
 - (none)
 
-## candidatelabs-crosby-legal-engineers
+## candidatelabs-copilotkit-engineers
 
 ### CLOSED
-- (none)
+- him last week < (:no_entry:)
 
 ### IN PROCESS  explicit
-- Ifenna Awagu 
+- (none)
 
 ### IN PROCESS  unclear (needs follow-up)
 - (none)
@@ -285,38 +296,29 @@ Generated at: 2026-02-19T19:47:10.681680+00:00
 ### CLOSED
 - Jordan Volz (:no_entry:)
 - Matt Kryshak (:no_entry:)
-- Benjamin Liang (:no_entry:)
-- Gina Wang (:no_entry:)
-- Edward Point (:no_entry:)
 
 ### IN PROCESS  explicit
-- Edward Point 
+- (none)
 
 ### IN PROCESS  unclear (needs follow-up)
-- (none)
+- Sunny Rekhi (needs follow-up (submitted 7 days ago))
 
 ## candidatelabs-decagon-eng
 
 ### CLOSED
+- Jongho Kim (:no_entry:)
+- Naba Rizvi (:no_entry:)
 - Benjamin Franc (:no_entry:)
 - Amogh Patankar (:no_entry:)
 - Puneet Chopra (:no_entry:)
 - Bhavya Chhadva (:no_entry:)
 - Andrew Do (:no_entry:)
-- Andrew Qian (:no_entry:)
-- Scott Bout (:no_entry:)
-- Elle Yang (:no_entry:)
-- Sampath Velaga (:no_entry:)
-- Konrad Cheng (:no_entry:)
-- Ayush Singh (:no_entry:)
-- Edward Point (:no_entry:)
 
 ### IN PROCESS  explicit
+- Tishya Khanna 
 - Ji Ding 
 - Boqian Zhang 
 - Jordan Volz 
-- Zhuoer Wang 
-- Chaitanya Manchikanti 
 
 ### IN PROCESS  unclear (needs follow-up)
 - (none)
@@ -324,20 +326,17 @@ Generated at: 2026-02-19T19:47:10.681680+00:00
 ## candidatelabs-deeptune-engineers
 
 ### CLOSED
+- Ruthvik Mukkamala (:no_entry:)
 - Pavel Ivanov (:no_entry:)
 - Liyang Zhou (:no_entry:)
 - Andrew Do (:no_entry:)
 - Gagik Magakyan (:no_entry:)
-- Bhav Bhela (:no_entry:)
-- Rithwik Sudarshan (:no_entry:)
-- Konrad Cheng (:no_entry:)
-- Andrew Liang (:no_entry:)
-- Max Cembalest (:no_entry:)
 
 ### IN PROCESS  explicit
+- Ray Tang 
+- Gina Wang 
 - Chris Wu 
 - Angel Lim 
-- Benjamin Liang 
 
 ### IN PROCESS  unclear (needs follow-up)
 - (none)
@@ -345,10 +344,10 @@ Generated at: 2026-02-19T19:47:10.681680+00:00
 ## candidatelabs-doctronic-engineers
 
 ### CLOSED
-- Max Cembalest (:no_entry:)
+- (none)
 
 ### IN PROCESS  explicit
-- (none)
+- William Bang 
 
 ### IN PROCESS  unclear (needs follow-up)
 - (none)
@@ -356,10 +355,11 @@ Generated at: 2026-02-19T19:47:10.681680+00:00
 ## candidatelabs-eagle-engineers
 
 ### CLOSED
+- Anshay Ghosh (:no_entry:)
+- Seoyoon Jin (:no_entry:)
 - Liyang Zhou (:no_entry:)
 
 ### IN PROCESS  explicit
-- Seoyoon Jin 
 - Daniel Jubas 
 - John Piotrowski 
 
@@ -375,17 +375,21 @@ Generated at: 2026-02-19T19:47:10.681680+00:00
 - (none)
 
 ### IN PROCESS  unclear (needs follow-up)
-- Sunny Rekhi (needs follow-up (submitted 1 days ago))
-- Satyapriya Krishna (needs follow-up (submitted 1 days ago))
+- Arindam Chanda (needs follow-up (submitted 0 days ago))
+- Manny Gundampalli (needs follow-up (submitted 1 days ago))
+- Zhuoer Wang (needs follow-up (submitted 6 days ago))
+- Sampath Velaga (needs follow-up (submitted 14 days ago))
+- Sunny Rekhi (needs follow-up (submitted 15 days ago))
+- Satyapriya Krishna (needs follow-up (submitted 15 days ago))
 
 ## candidatelabs-endeavor-engineers
 
 ### CLOSED
+- Benjamin Franc (:no_entry:)
 - Teja Nanduri (:no_entry:)
-- Amro Younes (:no_entry:)
 
 ### IN PROCESS  explicit
-- Benjamin Franc 
+- Manny Gundampalli 
 - Yi Louise L 
 
 ### IN PROCESS  unclear (needs follow-up)
@@ -394,16 +398,15 @@ Generated at: 2026-02-19T19:47:10.681680+00:00
 ## candidatelabs-endex-engineering
 
 ### CLOSED
-- Andrew Liang (:no_entry:)
+- (none)
 
 ### IN PROCESS  explicit
+- Manwai “Mandy” Cheung 
 - Siddharth Thiagarajan 
 - Maanav Agrawal 
 - Andrew Do 
 - Daniel Jubas 
 - John Piotrowski 
-- Matthew Klimek 
-- Rian Atri 
 
 ### IN PROCESS  unclear (needs follow-up)
 - (none)
@@ -411,14 +414,12 @@ Generated at: 2026-02-19T19:47:10.681680+00:00
 ## candidatelabs-epsilon-engineers
 
 ### CLOSED
+- Amogh Patankar (:no_entry:)
 - Ashwin Pathi (:no_entry:)
 - Nagendra Athreya (:no_entry:)
-- Rian Atri (:no_entry:)
-- Rithwik Sudarshan (:no_entry:)
 
 ### IN PROCESS  explicit
-- Amogh Patankar 
-- Elle Yang 
+- (none)
 
 ### IN PROCESS  unclear (needs follow-up)
 - (none)
@@ -426,13 +427,10 @@ Generated at: 2026-02-19T19:47:10.681680+00:00
 ## candidatelabs-faction-engineers
 
 ### CLOSED
-- Bryan Shangguan (:no_entry:)
-- Gina Wang (:no_entry:)
-- Armaan Hiranandani (:no_entry:)
+- (none)
 
 ### IN PROCESS  explicit
-- John Friess 
-- Rachel Lai 
+- Chetan Goenka 
 
 ### IN PROCESS  unclear (needs follow-up)
 - (none)
@@ -443,20 +441,22 @@ Generated at: 2026-02-19T19:47:10.681680+00:00
 - (none)
 
 ### IN PROCESS  explicit
+- Ray Tang 
+- Manny Gundampalli 
+- Sunny Rekhi 
 - Maanav Agrawal 
 - Benjamin Franc 
 
 ### IN PROCESS  unclear (needs follow-up)
-- Sunny Rekhi (needs follow-up (submitted 0 days ago))
+- (none)
 
 ## candidatelabs-finch-legal-engineers
 
 ### CLOSED
-- Rian Atri (:no_entry:)
+- (none)
 
 ### IN PROCESS  explicit
 - Liyang Zhou 
-- Ifenna Awagu 
 
 ### IN PROCESS  unclear (needs follow-up)
 - (none)
@@ -464,16 +464,12 @@ Generated at: 2026-02-19T19:47:10.681680+00:00
 ## candidatelabs-fleet-engineering
 
 ### CLOSED
+- Benjamin Franc (:no_entry:)
+- Chris Wu (:no_entry:)
 - Andrew Do (:no_entry:)
-- Benjamin Liang (:no_entry:)
-- Andrew Liang (:no_entry:)
 
 ### IN PROCESS  explicit
-- Benjamin Franc 
-- Chris Wu 
-- Sayan Chaudhry 
-- Rithwik Sudarshan 
-- Konrad Cheng 
+- Ray Tang 
 
 ### IN PROCESS  unclear (needs follow-up)
 - (none)
@@ -492,25 +488,36 @@ Generated at: 2026-02-19T19:47:10.681680+00:00
 ## candidatelabs-foam-engineers
 
 ### CLOSED
-- Chaitanya Manchikanti (:no_entry:)
+- (none)
 
 ### IN PROCESS  explicit
 - Pavel Ivanov 
-- Bharadwaj Rallabhandi 
 
 ### IN PROCESS  unclear (needs follow-up)
 - (none)
 
+## candidatelabs-forge
+
+### CLOSED
+- Zhuoer Wang (:no_entry:)
+- Andy Ratsirarson (:no_entry:)
+- Alex Talyuk (:no_entry:)
+
+### IN PROCESS  explicit
+- Tishya Khanna 
+- Darsh Doshi 
+- Gina Wang 
+
+### IN PROCESS  unclear (needs follow-up)
+- Anshay Ghosh (needs follow-up (submitted 10 days ago))
+
 ## candidatelabs-foxglove-engineers
 
 ### CLOSED
-- Ruta Joshi (:no_entry:)
-- Edward Point (:no_entry:)
+- Chris Klink (:no_entry:)
 
 ### IN PROCESS  explicit
-- Chris Klink 
-- Grace Guo 
-- Micah Stubbs 
+- (none)
 
 ### IN PROCESS  unclear (needs follow-up)
 - (none)
@@ -522,8 +529,6 @@ Generated at: 2026-02-19T19:47:10.681680+00:00
 
 ### IN PROCESS  explicit
 - Maanav Agrawal 
-- Kishan Adapa 
-- Andrew Liang 
 
 ### IN PROCESS  unclear (needs follow-up)
 - (none)
@@ -548,46 +553,35 @@ Generated at: 2026-02-19T19:47:10.681680+00:00
 - (none)
 
 ### IN PROCESS  unclear (needs follow-up)
-- Emmanuel Ayumba (needs follow-up (submitted 8 days ago))
+- Emmanuel Ayumba (needs follow-up (submitted 23 days ago))
 
 ## candidatelabs-graphite-engineers
 
 ### CLOSED
+- Justin Jones (:no_entry:)
 - Peter Wang Currier (:no_entry:)
 - Gary Shen (:no_entry:)
 
 ### IN PROCESS  explicit
-- (none)
+- Manny Gundampalli 
 
 ### IN PROCESS  unclear (needs follow-up)
-- Benjamin Franc (needs follow-up (submitted 2 days ago))
-- Matthew Zhao (needs follow-up (submitted 6 days ago))
-- Ji Ding (needs follow-up (submitted 7 days ago))
-- Maanav Agrawal (needs follow-up (submitted 10 days ago))
-- Pavel Ivanov (needs follow-up (submitted 14 days ago))
-- Liyang Zhou (needs follow-up (submitted 29 days ago))
-- Brijesh Gujar (needs follow-up (submitted 29 days ago))
-- Daniel Jubas (needs follow-up (submitted 29 days ago))
-- Konrad Cheng (needs follow-up (submitted 42 days ago))
-- Veni Johanna (needs follow-up (submitted 43 days ago))
+- Minh Tuan Tran (needs follow-up (submitted 2 days ago))
+- Benjamin Franc (needs follow-up (submitted 16 days ago))
+- Matthew Zhao (needs follow-up (submitted 21 days ago))
+- Ji Ding (needs follow-up (submitted 21 days ago))
+- Maanav Agrawal (needs follow-up (submitted 24 days ago))
+- Pavel Ivanov (needs follow-up (submitted 28 days ago))
+- Liyang Zhou (needs follow-up (submitted 43 days ago))
+- Brijesh Gujar (needs follow-up (submitted 43 days ago))
+- Daniel Jubas (needs follow-up (submitted 44 days ago))
 
 ## candidatelabs-hedra-engineers
 
 ### CLOSED
+- Yash Dalmia (:no_entry:)
+- Maxwell Siegelman (:no_entry:)
 - Angel Lim (:no_entry:)
-- Nischal Chandra (:no_entry_sign:)
-
-### IN PROCESS  explicit
-- Elle Yang 
-- Hengstar Gong 
-
-### IN PROCESS  unclear (needs follow-up)
-- (none)
-
-## candidatelabs-homie-founding-engineers
-
-### CLOSED
-- Andrew Liang (:no_entry:)
 
 ### IN PROCESS  explicit
 - (none)
@@ -599,7 +593,6 @@ Generated at: 2026-02-19T19:47:10.681680+00:00
 
 ### CLOSED
 - Pavel Ivanov (:no_entry:)
-- Grace Guo (:no_entry:)
 
 ### IN PROCESS  explicit
 - (none)
@@ -624,8 +617,6 @@ Generated at: 2026-02-19T19:47:10.681680+00:00
 ### CLOSED
 - Andy Ratsirarson (:no_entry:)
 - Leonardo Faria (Canada based) (:no_entry:)
-- Amin Hassani (:no_entry:)
-- Simcha Coleman (:no_entry:)
 
 ### IN PROCESS  explicit
 - Peter Wang Currier 
@@ -647,30 +638,32 @@ Generated at: 2026-02-19T19:47:10.681680+00:00
 ## candidatelabs-ironsite-engineers
 
 ### CLOSED
+- Anshay Ghosh (:no_entry:)
 - Benjamin Franc (:no_entry:)
-- Rithwik Sudarshan (:no_entry:)
 
 ### IN PROCESS  explicit
 - Zhangqi (James) Luo 
+- Chittesh Thavamani 
 - Angel Lim 
 - Hengstar Gong 
 - Ashwin Pathi 
-- Elle Yang 
 
 ### IN PROCESS  unclear (needs follow-up)
-- Chittesh Thavamani (needs follow-up (submitted 2 days ago))
+- (none)
 
 ## candidatelabs-january-engineers
 
 ### CLOSED
+- Sayed Raheel Hussain (:no_entry:)
 - Liyang Zhou (:no_entry:)
 
 ### IN PROCESS  explicit
+- Sunny Rekhi 
 - Andy Ratsirarson 
 - Chirag Nath 
 
 ### IN PROCESS  unclear (needs follow-up)
-- Sunny Rekhi (needs follow-up (submitted 0 days ago))
+- (none)
 
 ## candidatelabs-knit-engineers
 
@@ -680,7 +673,6 @@ Generated at: 2026-02-19T19:47:10.681680+00:00
 
 ### IN PROCESS  explicit
 - Daniel Jubas 
-- Ifenna Awagu 
 
 ### IN PROCESS  unclear (needs follow-up)
 - (none)
@@ -699,7 +691,7 @@ Generated at: 2026-02-19T19:47:10.681680+00:00
 ## candidatelabs-levit-engineers
 
 ### CLOSED
-- Hengstar Gong (:no_entry:)
+- (none)
 
 ### IN PROCESS  explicit
 - Zhangqi (James) Luo 
@@ -715,7 +707,6 @@ Generated at: 2026-02-19T19:47:10.681680+00:00
 - Brijesh Gujar (:no_entry:)
 - Alex Chaplinsky (:no_entry:)
 - Chris Glace (:no_entry:)
-- Amin Hassani (:no_entry:)
 
 ### IN PROCESS  explicit
 - (none)
@@ -735,6 +726,23 @@ Generated at: 2026-02-19T19:47:10.681680+00:00
 ### IN PROCESS  unclear (needs follow-up)
 - (none)
 
+## candidatelabs-longlake-eng
+
+### CLOSED
+- Ray Tang (:no_entry:)
+- Ayush (:no_entry:)
+- Ayush (:no_entry:)
+
+### IN PROCESS  explicit
+- Tishya Khanna 
+- Justin Jones 
+- Augustin Tsang 
+- Zhuoer Wang 
+- Sunny Rekhi 
+
+### IN PROCESS  unclear (needs follow-up)
+- (none)
+
 ## candidatelabs-loop-engineers
 
 ### CLOSED
@@ -744,24 +752,50 @@ Generated at: 2026-02-19T19:47:10.681680+00:00
 - (none)
 
 ### IN PROCESS  unclear (needs follow-up)
-- Andy Ratsirarson (needs follow-up (submitted 5 days ago))
-- Chirag Nath (needs follow-up (submitted 6 days ago))
+- Andy Ratsirarson (needs follow-up (submitted 19 days ago))
+- Chirag Nath (needs follow-up (submitted 20 days ago))
+
+## candidatelabs-loyalist-engineers
+
+### CLOSED
+- Anshay Ghosh (:no_entry:)
+
+### IN PROCESS  explicit
+- (none)
+
+### IN PROCESS  unclear (needs follow-up)
+- (none)
 
 ## candidatelabs-matter-intelligence
 
 ### CLOSED
+- Maxwell Siegelman (:no_entry:)
+- Aaron Gokaslan (:no_entry:)
 - Ashwin Pathi (:no_entry:)
 - Matt Kryshak (:no_entry:)
-- Mitchell Spryn (:no_entry:)
-- Benjamin Liang (:no_entry:)
-- Pooja Nagpal (:no_entry:)
 
 ### IN PROCESS  explicit
-- Rithwik Sudarshan 
-- Edward Point 
+- (none)
 
 ### IN PROCESS  unclear (needs follow-up)
-- Aaron Gokaslan (needs follow-up (submitted 8 days ago))
+- (none)
+
+## candidatelabs-mavi-eng
+
+### CLOSED
+- Andrew W. Quinn (:no_entry:)
+- Wayne Liu (:no_entry:)
+- Alex Chaplinsky (:no_entry:)
+- their backgrounds • < (:no_entry:)
+- • <https://www.linkedin.com/in/rey-cruz-b716a2102/> • < (:no_entry:)
+- • <https://www.linkedin.com/in/sunny-rekhi> • < (:no_entry:)
+
+### IN PROCESS  explicit
+- (none)
+
+### IN PROCESS  unclear (needs follow-up)
+- Josef Erben (needs follow-up (submitted 3 days ago))
+- Bhav Bhela (needs follow-up (submitted 8 days ago))
 
 ## candidatelabs-mem0-engineers
 
@@ -771,20 +805,6 @@ Generated at: 2026-02-19T19:47:10.681680+00:00
 
 ### IN PROCESS  explicit
 - Angel Lim 
-- Zhuoer Wang 
-
-### IN PROCESS  unclear (needs follow-up)
-- (none)
-
-## candidatelabs-mesa-engineers
-
-### CLOSED
-- Hengstar Gong (:no_entry:)
-- Konrad Cheng (:no_entry:)
-
-### IN PROCESS  explicit
-- Chetan Goenka 
-- Elle Yang 
 
 ### IN PROCESS  unclear (needs follow-up)
 - (none)
@@ -793,12 +813,12 @@ Generated at: 2026-02-19T19:47:10.681680+00:00
 
 ### CLOSED
 - Ifenna Awagu (:no_entry:)
+- Seoyoon Jin (:no_entry:)
 - Katherine Yan (:no_entry:)
+- Benjamin Franc (:no_entry:)
 
 ### IN PROCESS  explicit
 - Pooja Nagpal 
-- Seoyoon Jin 
-- Benjamin Franc 
 - Rahul Datta 
 
 ### IN PROCESS  unclear (needs follow-up)
@@ -808,47 +828,43 @@ Generated at: 2026-02-19T19:47:10.681680+00:00
 
 ### CLOSED
 - Jarrod Parks (:no_entry:)
-- Pooja Nagpal (:no_entry:)
-- Bhav Bhela (:no_entry:)
 
 ### IN PROCESS  explicit
+- Sunny Rekhi 
 - Liyang Zhou 
 
 ### IN PROCESS  unclear (needs follow-up)
-- Sunny Rekhi (needs follow-up (submitted 0 days ago))
+- (none)
 
 ## candidatelabs-netic-engineers
 
 ### CLOSED
+- Benjamin Franc (:no_entry:)
 - Amogh Patankar (:no_entry:)
 - Angel Lim (:no_entry:)
-- Elle Yang (:no_entry:)
 
 ### IN PROCESS  explicit
-- Benjamin Franc 
-- Edward Point 
+- (none)
 
 ### IN PROCESS  unclear (needs follow-up)
-- Zhangqi (James) Luo (needs follow-up (submitted 2 days ago))
+- Zhangqi (James) Luo (needs follow-up (submitted 16 days ago))
 
 ## candidatelabs-nooks-engineering
 
 ### CLOSED
-- (none)
+- Russell Holz (:no_entry:)
 
 ### IN PROCESS  explicit
 - Benjamin Franc 
 
 ### IN PROCESS  unclear (needs follow-up)
-- Russell Holz (needs follow-up (submitted 1 days ago))
+- (none)
 
 ## candidatelabs-nova-software-engineers
 
 ### CLOSED
 - Gary Shen (:no_entry:)
 - Darsh Doshi (:no_entry:)
-- Chetan Goenka (:no_entry:)
-- Gina Wang (:no_entry:)
 
 ### IN PROCESS  explicit
 - (none)
@@ -859,12 +875,11 @@ Generated at: 2026-02-19T19:47:10.681680+00:00
 ## candidatelabs-nuvo-engineering
 
 ### CLOSED
-- Armaan Hiranandani (:no_entry:)
+- (none)
 
 ### IN PROCESS  explicit
+- Augustin Tsang 
 - Armaan Hiranandani 
-- Rahul Datta 
-- Chaitanya Manchikanti 
 
 ### IN PROCESS  unclear (needs follow-up)
 - (none)
@@ -872,6 +887,7 @@ Generated at: 2026-02-19T19:47:10.681680+00:00
 ## candidatelabs-polynomic-engineers
 
 ### CLOSED
+- Matthew Klimek (:no_entry:)
 - Pavel Ivanov (:no_entry:)
 
 ### IN PROCESS  explicit
@@ -883,10 +899,10 @@ Generated at: 2026-02-19T19:47:10.681680+00:00
 ## candidatelabs-portola-engineers
 
 ### CLOSED
+- Anshay Ghosh (:no_entry:)
 - Amogh Patankar (:no_entry:)
 - Puneet Chopra (:no_entry:)
 - Mian Zhang (:no_entry:)
-- Hengstar Gong (:no_entry:)
 
 ### IN PROCESS  explicit
 - Angel Lim 
@@ -897,6 +913,7 @@ Generated at: 2026-02-19T19:47:10.681680+00:00
 ## candidatelabs-productnow-engineers
 
 ### CLOSED
+- Benjamin Franc (:no_entry:)
 - Amogh Patankar (:no_entry:)
 - Alex Talyuk (:no_entry:)
 - Peter Wang Currier (:no_entry:)
@@ -906,7 +923,7 @@ Generated at: 2026-02-19T19:47:10.681680+00:00
 - (none)
 
 ### IN PROCESS  unclear (needs follow-up)
-- Benjamin Franc (needs follow-up (submitted 2 days ago))
+- Ray Tang (needs follow-up (submitted 0 days ago))
 
 ## candidatelabs-raindrop-engineers
 
@@ -916,6 +933,17 @@ Generated at: 2026-02-19T19:47:10.681680+00:00
 ### IN PROCESS  explicit
 - Yi Louise L 
 - Pavel Ivanov 
+
+### IN PROCESS  unclear (needs follow-up)
+- (none)
+
+## candidatelabs-raspberry-eng
+
+### CLOSED
+- Satyapriya Krishna (:no_entry:)
+
+### IN PROCESS  explicit
+- Scott Bout 
 
 ### IN PROCESS  unclear (needs follow-up)
 - (none)
@@ -937,26 +965,21 @@ Generated at: 2026-02-19T19:47:10.681680+00:00
 - Maanav Agrawal (:no_entry:)
 - Amogh Patankar (:no_entry:)
 - Benjamin Franc (:no_entry:)
+- Zhuoer Wang (:no_entry:)
 - Brijesh Gujar (:no_entry:)
 - Bharadwaj Rallabhandi (:no_entry:)
-- Elle Yang (:no_entry:)
-- Gina Wang (:no_entry:)
 
 ### IN PROCESS  explicit
-- Zhuoer Wang 
-- Rithwik Sudarshan 
-- Konrad Cheng 
-- Veni Johanna 
+- Ray Tang 
+- Manny Gundampalli 
 
 ### IN PROCESS  unclear (needs follow-up)
-- (none)
+- Surgan Jandial (needs follow-up (submitted 0 days ago))
 
 ## candidatelabs-revin-engineering
 
 ### CLOSED
 - Liyang Zhou (:no_entry:)
-- Gina Wang (:no_entry:)
-- Armaan Hiranandani (:no_entry:)
 
 ### IN PROCESS  explicit
 - (none)
@@ -967,100 +990,104 @@ Generated at: 2026-02-19T19:47:10.681680+00:00
 ## candidatelabs-rilix-engineers
 
 ### CLOSED
+- Krish Goel (:no_entry:)
+- Krish Goel (:no_entry:)
 - Liyang Zhou (:no_entry:)
 - Andrew Do (:no_entry:)
 - Gagik Magakyan (:no_entry:)
 - Benjamin Liang (:no_entry:)
-- Matthew Klimek (:no_entry:)
-- Rithwik Sudarshan (:no_entry:)
-- Ifenna Awagu (:no_entry:)
 
 ### IN PROCESS  explicit
 - Benjamin Franc 
 - Daniel Jubas 
-- Scott Bout 
-- Konrad Cheng 
 
 ### IN PROCESS  unclear (needs follow-up)
-- (none)
+- Sayed Raheel Hussain (needs follow-up (submitted 1 days ago))
 
 ## candidatelabs-rilla-engineers
 
 ### CLOSED
-- Gina Wang (:no_entry:)
+- (none)
+
+### IN PROCESS  explicit
+- Benjamin Franc 
+
+### IN PROCESS  unclear (needs follow-up)
+- Tishya Khanna (needs follow-up (submitted 0 days ago))
+- Ray Tang (needs follow-up (submitted 0 days ago))
+
+## candidatelabs-rillet-engineers
+
+### CLOSED
+- Russell Holz (:no_entry:)
+- Yi Louise L (:no_entry:)
 
 ### IN PROCESS  explicit
 - (none)
 
 ### IN PROCESS  unclear (needs follow-up)
-- Benjamin Franc (needs follow-up (submitted 2 days ago))
-
-## candidatelabs-rillet-engineers
-
-### CLOSED
-- Ifenna Awagu (:no_entry:)
-
-### IN PROCESS  explicit
-- Yi Louise L 
-
-### IN PROCESS  unclear (needs follow-up)
-- Russell Holz (needs follow-up (submitted 1 days ago))
+- (none)
 
 ## candidatelabs-rmgrowth-engineers
 
 ### CLOSED
+- Andrew W. Quinn (:no_entry:)
+- Misha Makara (:no_entry:)
+- Wayne Liu (:no_entry:)
 - Puneet Chopra (:no_entry:)
 - Seoyoon Jin (:no_entry:)
 - Alex Chaplinsky (:no_entry:)
+- Hengstar Gong (:no_entry:)
 - Peter Wang Currier (:no_entry:)
 - Yifan Wang (:no_entry:)
 
 ### IN PROCESS  explicit
-- Misha Makara 
 - Russell Holz 
 - Andy Ratsirarson 
-- Wayne Liu 
 - Leonardo Faria 
 
 ### IN PROCESS  unclear (needs follow-up)
-- Josef Erben (needs follow-up (submitted 0 days ago))
-- Hengstar Gong (needs follow-up (submitted 13 days ago))
+- Josef Erben (needs follow-up (submitted 14 days ago))
+
+## candidatelabs-runlayer-engineers
+
+### CLOSED
+- Peter Wang Currier (:no_entry:)
+- Ji Ding (:no_entry:)
+- Zhuoer Wang (:no_entry:)
+- Tiffany Li (:no_entry:)
+- Pavel Ivanov (:no_entry:)
+
+### IN PROCESS  explicit
+- Yi Louise L 
+- Jared Storts 
+- Sayan Chaudhry 
+
+### IN PROCESS  unclear (needs follow-up)
+- (none)
 
 ## candidatelabs-sable-engineers
 
 ### CLOSED
+- Benjamin Franc (:no_entry:)
 - Darsh Doshi (:no_entry:)
 
 ### IN PROCESS  explicit
 - (none)
 
 ### IN PROCESS  unclear (needs follow-up)
-- Benjamin Franc (needs follow-up (submitted 2 days ago))
-- Hengstar Gong (needs follow-up (submitted 40 days ago))
+- (none)
 
 ## candidatelabs-salient-engineers
 
 ### CLOSED
-- Amro Younes (:no_entry:)
+- (none)
 
 ### IN PROCESS  explicit
 - Benjamin Franc 
 - Amogh Patankar 
 - Angel Lim 
 - Andrew Do 
-- Elle Yang 
-
-### IN PROCESS  unclear (needs follow-up)
-- (none)
-
-## candidatelabs-sandstone-greyball-engineers
-
-### CLOSED
-- Bryan Shangguan (:no_entry:)
-- Gina Wang (:no_entry:)
-
-### IN PROCESS  explicit
-- (none)
 
 ### IN PROCESS  unclear (needs follow-up)
 - (none)
@@ -1068,14 +1095,13 @@ Generated at: 2026-02-19T19:47:10.681680+00:00
 ## candidatelabs-sequence-holdings-engineers
 
 ### CLOSED
+- Seoyoon Jin (:no_entry:)
 - Daniel Jubas (:no_entry:)
 - Benjamin Liang (:no_entry:)
 
 ### IN PROCESS  explicit
-- Seoyoon Jin 
+- Sunny Rekhi 
 - John Piotrowski 
-- Andrew Liang 
-- Gina Wang 
 
 ### IN PROCESS  unclear (needs follow-up)
 - (none)
@@ -1086,11 +1112,10 @@ Generated at: 2026-02-19T19:47:10.681680+00:00
 - (none)
 
 ### IN PROCESS  explicit
-- (none)
+- Manny Gundampalli 
 
 ### IN PROCESS  unclear (needs follow-up)
-- Puneet Chopra (needs follow-up (submitted 16 days ago))
-- Veni Johanna (needs follow-up (submitted 43 days ago))
+- Puneet Chopra (needs follow-up (submitted 30 days ago))
 
 ## candidatelabs-sola-engineers
 
@@ -1104,61 +1129,37 @@ Generated at: 2026-02-19T19:47:10.681680+00:00
 ### IN PROCESS  unclear (needs follow-up)
 - (none)
 
-## candidatelabs-sonata-health-engineers
-
-### CLOSED
-- Rithwik Sudarshan (:no_entry:)
-- Andrew Liang (:no_entry:)
-
-### IN PROCESS  explicit
-- (none)
-
-### IN PROCESS  unclear (needs follow-up)
-- (none)
-
 ## candidatelabs-spatio-moonlake-ai-engineers
 
 ### CLOSED
 - Chris Wu (:no_entry:)
-- Andrew Liang (:no_entry:)
-
-### IN PROCESS  explicit
-- Chaitanya Manchikanti 
-- Hengstar Gong 
-
-### IN PROCESS  unclear (needs follow-up)
-- (none)
-
-## candidatelabs-squint-engineers
-
-### CLOSED
-- Andrew Liang (:no_entry:)
-- Hengstar Gong (:no_entry:)
 
 ### IN PROCESS  explicit
 - (none)
 
 ### IN PROCESS  unclear (needs follow-up)
-- (none)
+- Maxwell Siegelman (needs follow-up (submitted 2 days ago))
 
 ## candidatelabs-stuut-engineers
 
 ### CLOSED
+- Chintan Shah (:no_entry:)
 - Chirag Nath (:no_entry:)
+- Ajit Singh (:no_entry:)
 - Amogh Patankar (:no_entry:)
 - Chris Klink (:no_entry:)
+- Alex Talyuk (:no_entry:)
 - Hengstar Gong (:no_entry:)
 
 ### IN PROCESS  explicit
+- Anshay Ghosh 
 - Andy Ratsirarson 
 - Russell Holz 
 - Benjamin Franc 
-- Ajit Singh 
 - Yi Louise L 
-- Alex Talyuk 
 
 ### IN PROCESS  unclear (needs follow-up)
-- Chintan Shah (needs follow-up (submitted 6 days ago))
+- (none)
 
 ## candidatelabs-substrate-engineers
 
@@ -1175,10 +1176,11 @@ Generated at: 2026-02-19T19:47:10.681680+00:00
 ## candidatelabs-swoop-engineers
 
 ### CLOSED
+- Allan Pires (:no_entry:)
 - Peter Wang Currier (:no_entry:)
 
 ### IN PROCESS  explicit
-- Allan Pires 
+- (none)
 
 ### IN PROCESS  unclear (needs follow-up)
 - (none)
@@ -1190,46 +1192,59 @@ Generated at: 2026-02-19T19:47:10.681680+00:00
 - Seoyoon Jin (:no_entry:)
 - John Piotrowski (:no_entry:)
 - Benjamin Liang (:no_entry:)
-- Edward Point (:no_entry:)
 
 ### IN PROCESS  explicit
 - Daniel Jubas 
-- Veni Johanna 
 
 ### IN PROCESS  unclear (needs follow-up)
-- (none)
+- Tishya Khanna (needs follow-up (submitted 0 days ago))
+- Ray Tang (needs follow-up (submitted 0 days ago))
 
-## candidatelabs-toolkit-engineers
+## candidatelabs-tollbit-engineering
 
 ### CLOSED
-- Daniel Nee (:no_entry:)
+- (none)
 
 ### IN PROCESS  explicit
 - (none)
 
 ### IN PROCESS  unclear (needs follow-up)
-- (none)
+- Aravind Ramarathinam (needs follow-up (submitted 2 days ago))
 
 ## candidatelabs-trajectory-engineers
 
 ### CLOSED
+- Te-Lin Wu (:no_entry:)
+- Krish Goel (:no_entry:)
+- Aaron Gokaslan (:no_entry:)
+- Benjamin Franc (:no_entry:)
 - Elle Yang (:no_entry:)
 - Gagik Magakyan (:no_entry:)
 - Mitchell Spryn (:no_entry:)
 
 ### IN PROCESS  explicit
-- Aaron Gokaslan 
-- Benjamin Franc 
+- Avi Basnet 
 
 ### IN PROCESS  unclear (needs follow-up)
-- Xi Xiong (needs follow-up (submitted 7 days ago))
-- Xi Xiong (needs follow-up (submitted 23 days ago))
+- Maxwell Siegelman (needs follow-up (submitted 3 days ago))
+- Xi Xiong (needs follow-up (submitted 22 days ago))
+- Xi Xiong (needs follow-up (submitted 37 days ago))
+
+## candidatelabs-upstart-engineers
+
+### CLOSED
+- (none)
+
+### IN PROCESS  explicit
+- (none)
+
+### IN PROCESS  unclear (needs follow-up)
+- check in on < (needs follow-up (submitted 7 days ago))
 
 ## candidatelabs-vapi-engineering
 
 ### CLOSED
 - Teja Nanduri (:no_entry:)
-- Gina Wang (:no_entry:)
 
 ### IN PROCESS  explicit
 - (none)
@@ -1240,12 +1255,11 @@ Generated at: 2026-02-19T19:47:10.681680+00:00
 ## candidatelabs-vercel-engineers
 
 ### CLOSED
-- (none)
+- Leonardo Faria (Canada based) (:no_entry:)
+- Bharadwaj Rallabhandi (:no_entry:)
 
 ### IN PROCESS  explicit
-- Leonardo Faria (Canada based) 
-- Bharadwaj Rallabhandi 
-- Zhuoer Wang 
+- Lally Singh 
 
 ### IN PROCESS  unclear (needs follow-up)
 - (none)
@@ -1253,11 +1267,12 @@ Generated at: 2026-02-19T19:47:10.681680+00:00
 ## candidatelabs-voltai-engineers
 
 ### CLOSED
-- Andrew Liang (:no_entry:)
+- (none)
 
 ### IN PROCESS  explicit
+- Manny Gundampalli 
+- Maxwell Siegelman 
 - Yang Yan 
-- Konrad Cheng 
 
 ### IN PROCESS  unclear (needs follow-up)
 - (none)
@@ -1265,27 +1280,30 @@ Generated at: 2026-02-19T19:47:10.681680+00:00
 ## candidatelabs-wispr-flow-engineers
 
 ### CLOSED
+- Anshay Ghosh (:no_entry:)
 - Amogh Patankar (:no_entry:)
 - Ashwin Pathi (:no_entry:)
+- Puneet Chopra (:no_entry:)
 - Mian Zhang (:no_entry:)
 
 ### IN PROCESS  explicit
-- Puneet Chopra 
+- Manny Gundampalli 
 
 ### IN PROCESS  unclear (needs follow-up)
-- Anshay Ghosh (needs follow-up (submitted 0 days ago))
+- (none)
 
 ## candidatelabs-yobi-engineers
 
 ### CLOSED
+- George Brova (:no_entry:)
+- George Brova (:no_entry:)
 - Bhavya Chhadva (:no_entry:)
 
 ### IN PROCESS  explicit
 - (none)
 
 ### IN PROCESS  unclear (needs follow-up)
-- George Brova (needs follow-up (submitted 1 days ago))
-- George Brova (needs follow-up (submitted 1 days ago))
+- (none)
 
 ## candidatelabs-zingage-engineers
 
