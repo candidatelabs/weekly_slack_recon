@@ -185,6 +185,7 @@ The dashboard offers two methods when the Ashby session cookie expires:
 - **Search**: Candidate name, company, job title
 - **Click candidate name**: Clicking any name in the table instantly filters to that candidate and reveals the **✉ Email** button
 - **Thread panel**: Click "View Thread" to open the full Slack conversation with inline reply and `@mention` autocomplete
+- **Next Event column**: Shows all matching Google Calendar events per candidate (searches `"{first name} x {client name}"` in event titles). Upcoming events in green, past events in gray. Populated during Sync Slack.
 - **AI enrichment**: "Enrich with AI" generates Claude-powered bullet-point summaries for active Slack candidates
 
 ### Candidate Outreach
