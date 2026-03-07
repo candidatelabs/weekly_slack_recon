@@ -2115,6 +2115,9 @@
                     bVal = b.source === 'ashby'
                         ? (b.company_name || '').toLowerCase()
                         : formatChannelName(b.channel_name || '').toLowerCase();
+                } else if (sortColumn === 'calendar_event_date') {
+                    aVal = (a.calendar_events && a.calendar_events.length) ? a.calendar_events[0].date : '';
+                    bVal = (b.calendar_events && b.calendar_events.length) ? b.calendar_events[0].date : '';
                 } else {
                     aVal = a[sortColumn] ?? '';
                     bVal = b[sortColumn] ?? '';
@@ -2253,15 +2256,18 @@
         }
 
         function formatCalendarEvent(submission) {
-            if (!submission.calendar_event_date) return '<span style="color:#aaa;">—</span>';
-            const d = new Date(submission.calendar_event_date);
-            const month = d.toLocaleString('default', { month: 'short' });
-            const day = d.getDate();
-            const time = d.toLocaleTimeString('default', { hour: 'numeric', minute: '2-digit' });
-            const label = `${month} ${day}, ${time}`;
-            const color = submission.calendar_event_is_upcoming ? '#4ade80' : '#aaa';
-            const icon = submission.calendar_event_is_upcoming ? '📅' : '✓';
-            return `<span style="color:${color};" title="${escapeHtml(submission.calendar_event_summary || '')}">${icon} ${label}</span>`;
+            const events = submission.calendar_events;
+            if (!events || events.length === 0) return '<span style="color:#aaa;">—</span>';
+            const items = events.map(ev => {
+                const d = new Date(ev.date);
+                const month = d.toLocaleString('default', { month: 'short' });
+                const day = d.getDate();
+                const time = d.toLocaleTimeString('default', { hour: 'numeric', minute: '2-digit' });
+                const color = ev.is_upcoming ? '#4ade80' : '#aaa';
+                const icon = ev.is_upcoming ? '📅' : '✓';
+                return `<li style="color:${color};" title="${escapeHtml(ev.summary || '')}">${icon} ${month} ${day}, ${time}</li>`;
+            });
+            return `<ul style="list-style:none;padding:0;margin:0;font-size:0.85em;white-space:nowrap;">${items.join('')}</ul>`;
         }
 
         function formatChannelName(channelName) {

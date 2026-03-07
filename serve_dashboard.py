@@ -1250,15 +1250,19 @@ def _enrich_with_calendar_events(cfg, json_path: str) -> None:
 
         events = search_cache[cache_key]
         if events:
-            best = events[0]  # Already sorted: upcoming first, then most recent
-            s["calendar_event_summary"] = best.summary
-            s["calendar_event_date"] = best.start_time.isoformat()
-            s["calendar_event_is_upcoming"] = best.is_upcoming
+            s["calendar_events"] = [
+                {
+                    "summary": ev.summary,
+                    "date": ev.start_time.isoformat(),
+                    "is_upcoming": ev.is_upcoming,
+                }
+                for ev in events
+            ]
 
     with open(json_path, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
 
-    matched = sum(1 for s in submissions if s.get("calendar_event_date"))
+    matched = sum(1 for s in submissions if s.get("calendar_events"))
     print(f"[CALENDAR] Matched {matched}/{len(submissions)} submissions to calendar events")
 
 
