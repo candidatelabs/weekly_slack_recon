@@ -26,6 +26,7 @@ from weekly_slack_recon.reporting import write_markdown, write_json
 from weekly_slack_recon.enrichment import enrich_submissions
 from weekly_slack_recon.ashby_importer import load_ashby_export, merge_ashby_into_submissions, find_latest_ashby_export
 from weekly_slack_recon.status_check_runner import run_status_check
+from weekly_slack_recon.calendar_client import CalendarClient
 from weekly_slack_recon.message_composer import DraftMessage
 from weekly_slack_recon.candidate_outreach import (
     search_candidates,
@@ -1211,6 +1212,56 @@ def run_status_check_background():
 
 
 ASHBY_AUTOMATION_DIR = Path.home() / "Desktop" / "Ashby automation"
+def _enrich_with_calendar_events(cfg, json_path: str) -> None:
+    """Look up Google Calendar for events matching each candidate + client."""
+    import re as _re
+
+    cal = CalendarClient(cfg.gmail_credentials_path, cfg.gcal_token_path)
+
+    with open(json_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    submissions = data.get("submissions", [])
+
+    # Build unique (candidate_first_name, client_name) pairs to minimize API calls
+    search_cache: dict[tuple[str, str], list] = {}
+
+    for s in submissions:
+        candidate_name = s.get("candidate_name", "")
+        first_name = candidate_name.split()[0] if candidate_name else ""
+        if not first_name:
+            continue
+
+        # Derive client name from channel: "candidatelabs-sequence-holdings" -> "sequence holdings"
+        channel = s.get("channel_name", "")
+        client_name = _re.sub(r"^#?candidatelabs-", "", channel).replace("-", " ")
+        if not client_name:
+            continue
+
+        cache_key = (first_name.lower(), client_name.lower())
+        if cache_key not in search_cache:
+            events = cal.search_events(
+                candidate_first_name=first_name,
+                client_name=client_name,
+                lookback_days=cfg.lookback_days,
+                lookahead_days=cfg.gcal_lookahead_days,
+            )
+            search_cache[cache_key] = events
+
+        events = search_cache[cache_key]
+        if events:
+            best = events[0]  # Already sorted: upcoming first, then most recent
+            s["calendar_event_summary"] = best.summary
+            s["calendar_event_date"] = best.start_time.isoformat()
+            s["calendar_event_is_upcoming"] = best.is_upcoming
+
+    with open(json_path, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2, ensure_ascii=False)
+
+    matched = sum(1 for s in submissions if s.get("calendar_event_date"))
+    print(f"[CALENDAR] Matched {matched}/{len(submissions)} submissions to calendar events")
+
+
 ASHBY_EXTRACT_TIMEOUT = 300  # seconds (5 min) — extraction across all orgs can be slow
 
 
@@ -1323,6 +1374,16 @@ def run_generation(settings: dict = None):
             write_markdown(submissions, cfg.output_markdown_path, generated_at=now)
             json_path = cfg.output_markdown_path.replace('.md', '.json')
             write_json(submissions, json_path, generated_at=now)
+
+        # Look up calendar events for each submission
+        try:
+            update_progress("Checking Google Calendar for upcoming events...")
+            json_path = cfg.output_markdown_path.replace('.md', '.json')
+            _enrich_with_calendar_events(cfg, json_path)
+        except FileNotFoundError:
+            print("[CALENDAR] Credentials not found — skipping calendar lookup")
+        except Exception as e:
+            print(f"[CALENDAR] Calendar lookup failed: {e}")
 
         # Auto-refresh Ashby data then import
         if cfg.ashby_json_path:

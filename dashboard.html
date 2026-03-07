@@ -1822,6 +1822,7 @@
                         <th class="sortable" data-sort="status">Status</th>
                         <th>AI Summary</th>
                         <th class="sortable" data-sort="days_since_submission">Days</th>
+                        <th class="sortable" data-sort="calendar_event_date">Next Event</th>
                         <th>LinkedIn</th>
                         <th>Stage / Thread</th>
                     </tr>
@@ -2226,6 +2227,7 @@
                         </td>
                         <td class="ai-status-cell">${aiCell}</td>
                         <td><span class="days-old" title="${daysTitle}">${daysVal}d</span></td>
+                        <td>${formatCalendarEvent(submission)}</td>
                         <td>${submission.linkedin_url ? `<a href="${escapeHtml(submission.linkedin_url)}" target="_blank">View Profile</a>` : '<span style="color:#aaa;">—</span>'}</td>
                         <td>${actionCell}</td>
                     `;
@@ -2248,6 +2250,18 @@
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
+        }
+
+        function formatCalendarEvent(submission) {
+            if (!submission.calendar_event_date) return '<span style="color:#aaa;">—</span>';
+            const d = new Date(submission.calendar_event_date);
+            const month = d.toLocaleString('default', { month: 'short' });
+            const day = d.getDate();
+            const time = d.toLocaleTimeString('default', { hour: 'numeric', minute: '2-digit' });
+            const label = `${month} ${day}, ${time}`;
+            const color = submission.calendar_event_is_upcoming ? '#4ade80' : '#aaa';
+            const icon = submission.calendar_event_is_upcoming ? '📅' : '✓';
+            return `<span style="color:${color};" title="${escapeHtml(submission.calendar_event_summary || '')}">${icon} ${label}</span>`;
         }
 
         function formatChannelName(channelName) {
