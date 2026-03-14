@@ -29,8 +29,6 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Also requires **Node.js** and the **Ashby Automation** tool at `~/Desktop/Ashby automation/` (separate project).
-
 ### 2. Create `.env`
 
 ```env
@@ -40,7 +38,7 @@ LOOKBACK_DAYS=60
 UNCLEAR_FOLLOWUP_DAYS=7
 INACTIVITY_DAYS=5
 ANTHROPIC_API_KEY=sk-ant-api03-...  # From console.anthropic.com
-ASHBY_JSON_PATH=/Users/david/Desktop/Ashby automation/output
+ASHBY_JSON_PATH=./ashby_exports     # Directory for cached Ashby API results
 ```
 
 ### 3. Run

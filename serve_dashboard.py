@@ -9,7 +9,6 @@ import webbrowser
 import os
 import sys
 import json
-import subprocess
 import threading
 from pathlib import Path
 from datetime import datetime, timezone
@@ -24,7 +23,10 @@ from weekly_slack_recon.slack_client import SlackAPI
 from weekly_slack_recon.logic import build_candidate_submissions, CandidateSubmission
 from weekly_slack_recon.reporting import write_markdown, write_json
 from weekly_slack_recon.enrichment import enrich_submissions
-from weekly_slack_recon.ashby_importer import load_ashby_export, merge_ashby_into_submissions, find_latest_ashby_export
+from weekly_slack_recon.ashby_importer import (
+    load_ashby_export, merge_ashby_into_submissions, find_latest_ashby_export,
+    extract_and_save, save_ashby_cookie, load_ashby_cookie,
+)
 from weekly_slack_recon.status_check_runner import run_status_check
 from weekly_slack_recon.calendar_client import CalendarClient
 from weekly_slack_recon.message_composer import DraftMessage
@@ -655,37 +657,17 @@ class DashboardRequestHandler(http.server.SimpleHTTPRequestHandler):
             self.wfile.write(json.dumps({"error": str(e)}).encode())
 
     def handle_api_ashby_login(self):
-        """Launch Playwright browser for Ashby SSO login."""
-        try:
-            auth_cmd = [
-                "node", "--loader", "ts-node/esm",
-                "src/cli.ts", "auth",
-            ]
-            # Launch in background — opens a Chrome window for the user
-            proc = subprocess.Popen(
-                auth_cmd,
-                cwd=str(ASHBY_AUTOMATION_DIR),
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-            )
-            print(f"[ASHBY] Launched Playwright auth (pid={proc.pid}). User should log in and close the browser.")
-            self.send_response(200)
-            self.send_header("Content-Type", "application/json")
-            self.end_headers()
-            self.wfile.write(json.dumps({
-                "ok": True,
-                "message": "Browser window opened. Log in with Google, then close the browser window.",
-                "pid": proc.pid,
-            }).encode())
-        except Exception as e:
-            traceback.print_exc()
-            self.send_response(500)
-            self.send_header("Content-Type", "application/json")
-            self.end_headers()
-            self.wfile.write(json.dumps({"error": str(e)}).encode())
+        """No longer needed — cookie-based auth via Railway API replaces Playwright."""
+        self.send_response(200)
+        self.send_header("Content-Type", "application/json")
+        self.end_headers()
+        self.wfile.write(json.dumps({
+            "ok": True,
+            "message": "Playwright login is no longer needed. Paste your Ashby session cookie instead.",
+        }).encode())
 
     def handle_api_ashby_set_cookie(self):
-        """Save a fresh Ashby session cookie, then re-run extraction + import."""
+        """Save a fresh Ashby session cookie, then call Railway API to extract + import."""
         content_length = int(self.headers.get("Content-Length", 0))
         body = self.rfile.read(content_length).decode("utf-8")
         try:
@@ -701,37 +683,16 @@ class DashboardRequestHandler(http.server.SimpleHTTPRequestHandler):
             self.wfile.write(json.dumps({"error": "cookie is required"}).encode())
             return
 
-        # Auto-detect format:
-        # • Full cookie header  → "ashby_session_token=xxx; other=yyy"  (pass as-is)
-        # • Bare token value    → "eyJ..." or "s%3A..."                  (wrap it)
-        # Heuristic: if the input already contains "ashby_session_token" or has
-        # multiple "name=value" pairs (semicolons), treat as full header.
+        # Auto-detect format: bare token vs full cookie header
         if "ashby_session_token" not in cookie and ";" not in cookie:
-            # Assume the user pasted just the raw token value; wrap it so
-            # createSessionFromCookieHeader() can find it.
             cookie = f"ashby_session_token={cookie}"
             print(f"[ASHBY] Detected bare token value; wrapped as ashby_session_token=...")
 
         try:
-            # 1. Save the cookie using the auth-cookie CLI command
-            auth_cmd = [
-                "node", "--loader", "ts-node/esm",
-                "src/cli.ts", "auth-cookie",
-                "--cookie", cookie,
-            ]
-            auth_result = subprocess.run(
-                auth_cmd,
-                cwd=str(ASHBY_AUTOMATION_DIR),
-                capture_output=True,
-                text=True,
-                timeout=30,
-            )
-            if auth_result.returncode != 0:
-                raise RuntimeError(
-                    f"auth-cookie failed: {auth_result.stderr[-300:]}"
-                )
+            # 1. Save the cookie locally
+            save_ashby_cookie(cookie)
 
-            # 2. Re-run extraction with the fresh session
+            # 2. Extract via Railway API + save to disk
             cfg = load_config()
             ashby_path = cfg.ashby_json_path or ""
             if not ashby_path:
@@ -1092,12 +1053,11 @@ def run_ashby_sync():
 
         if not success:
             ashby_sync_status["auth_required"] = True
-            ashby_sync_status["detail"] = "Session expired — paste a fresh Ashby cookie below."
             generation_status["ashby_auth_required"] = True
-            return
+            # Don't return — fall through to import the latest existing file
 
-        # Step 2: Import fresh data
-        ashby_sync_status["detail"] = "Importing fresh candidates..."
+        # Step 2: Import fresh (or last-good) data
+        ashby_sync_status["detail"] = "Importing candidates..."
         ashby_file = find_latest_ashby_export(cfg.ashby_json_path)
         ashby_candidates = load_ashby_export(ashby_file)
 
@@ -1114,6 +1074,8 @@ def run_ashby_sync():
 
         with open(json_path, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=2, ensure_ascii=False)
+
+        _populate_ashby_calendar_events(json_path)
 
         ashby_sync_status["imported"] = len(ashby_candidates)
         ashby_sync_status["detail"] = f"Done! Imported {len(ashby_candidates)} candidates."
@@ -1211,7 +1173,6 @@ def run_status_check_background():
         status_check_status["running"] = False
 
 
-ASHBY_AUTOMATION_DIR = Path.home() / "Desktop" / "Ashby automation"
 def _enrich_with_calendar_events(cfg, json_path: str) -> None:
     """Look up Google Calendar for events matching each candidate + client."""
     import re as _re
@@ -1266,57 +1227,81 @@ def _enrich_with_calendar_events(cfg, json_path: str) -> None:
     print(f"[CALENDAR] Matched {matched}/{len(submissions)} submissions to calendar events")
 
 
+def _populate_ashby_calendar_events(json_path) -> None:
+    """Convert Ashby interview_events to calendar_events for Next Event display."""
+    with open(json_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    now = datetime.now(tz=timezone.utc)
+    count = 0
+
+    for s in data.get("submissions", []):
+        interview_events = s.get("interview_events")
+        if not interview_events or s.get("calendar_events"):
+            continue
+
+        cal_events = []
+        for ie in interview_events:
+            start = ie.get("startTime", "")
+            if not start:
+                continue
+            try:
+                dt = datetime.fromisoformat(start.replace("Z", "+00:00"))
+                is_upcoming = dt > now
+            except ValueError:
+                is_upcoming = False
+            cal_events.append({
+                "summary": ie.get("interviewTitle", "Interview"),
+                "date": start,
+                "is_upcoming": is_upcoming,
+            })
+
+        if cal_events:
+            # Sort: upcoming first (by date asc), then past (by date desc)
+            cal_events.sort(key=lambda e: (not e["is_upcoming"], e["date"] if e["is_upcoming"] else ""))
+            s["calendar_events"] = cal_events
+            count += 1
+
+    with open(json_path, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2, ensure_ascii=False)
+
+    print(f"[ASHBY] Populated calendar_events for {count} Ashby candidates from interview data")
+
+
 ASHBY_EXTRACT_TIMEOUT = 300  # seconds (5 min) — extraction across all orgs can be slow
 
 
 def _run_ashby_extraction(ashby_json_path: str) -> bool:
     """
-    Run the Ashby Automation Node.js extraction tool to generate a fresh export.
-    Uses the saved session in .ashby-session.json (no browser required).
+    Call the Ashby Pipeline Railway API to extract fresh candidate data.
+    Uses the saved session cookie in .ashby-session.json.
 
     Returns True if extraction succeeded, False if it failed (e.g. session expired).
     On failure the caller falls back to the last-good JSON file in the output directory.
     """
-    if not ASHBY_AUTOMATION_DIR.exists():
-        print(f"[ASHBY] Automation directory not found: {ASHBY_AUTOMATION_DIR}")
+    cookie = load_ashby_cookie()
+    if not cookie:
+        print("[ASHBY] No saved session cookie — cannot extract. Paste a cookie via the dashboard.")
+        generation_status["ashby_auth_required"] = True
         return False
 
-    output_dir = Path(ashby_json_path) if Path(ashby_json_path).is_dir() else Path(ashby_json_path).parent
-    today = datetime.now().strftime("%Y-%m-%d")
-    out_json = output_dir / f"ashby_pipeline_{today}.json"
-    out_csv  = output_dir / f"ashby_pipeline_{today}.csv"
+    output_dir = str(Path(ashby_json_path) if Path(ashby_json_path).is_dir() else Path(ashby_json_path).parent)
 
-    cmd = [
-        "node", "--loader", "ts-node/esm",
-        "src/cli.ts", "extract",
-        "--json", str(out_json),
-        "--csv",  str(out_csv),
-    ]
-
-    update_progress("Refreshing Ashby data...")
-    print(f"[ASHBY] Running extraction: {' '.join(cmd)}")
+    update_progress("Refreshing Ashby data via API...")
+    print(f"[ASHBY] Calling Railway API for extraction...")
 
     try:
-        result = subprocess.run(
-            cmd,
-            cwd=str(ASHBY_AUTOMATION_DIR),
-            capture_output=True,
-            text=True,
-            timeout=ASHBY_EXTRACT_TIMEOUT,
-        )
-        if result.returncode == 0:
-            print(f"[ASHBY] Extraction succeeded → {out_json}")
-            generation_status["ashby_auth_required"] = False
-            return True
-        else:
-            print(f"[ASHBY] Extraction failed (exit {result.returncode}) — session likely expired")
-            if result.stderr:
-                print(f"[ASHBY] stderr: {result.stderr[-500:]}")
+        saved_path = extract_and_save(cookie, output_dir, timeout=ASHBY_EXTRACT_TIMEOUT)
+        print(f"[ASHBY] Extraction succeeded → {saved_path}")
+        generation_status["ashby_auth_required"] = False
+        return True
+    except RuntimeError as e:
+        err_msg = str(e)
+        print(f"[ASHBY] Extraction failed: {err_msg}")
+        if "expired" in err_msg.lower() or "401" in err_msg:
             generation_status["ashby_auth_required"] = True
-            return False
-    except subprocess.TimeoutExpired:
-        print(f"[ASHBY] Extraction timed out after {ASHBY_EXTRACT_TIMEOUT}s")
-        generation_status["ashby_auth_required"] = True
+        else:
+            generation_status["ashby_auth_required"] = True
         return False
     except Exception as e:
         print(f"[ASHBY] Extraction error: {e}")
@@ -1409,6 +1394,7 @@ def run_generation(settings: dict = None):
                 with open(resolved_json, "w", encoding="utf-8") as f:
                     json.dump(data, f, indent=2, ensure_ascii=False)
                 print(f"[ASHBY] Imported {len(ashby_candidates)} candidates from {ashby_file}")
+                _populate_ashby_calendar_events(resolved_json)
             except FileNotFoundError:
                 print("[ASHBY] No export file found — skipping import")
             except Exception as e:

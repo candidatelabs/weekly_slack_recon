@@ -55,7 +55,7 @@ class Config:
 def load_config() -> Config:
     """Load configuration from environment variables / .env file."""
 
-    load_dotenv()
+    load_dotenv(override=True)
 
     slack_bot_token = os.getenv("SLACK_BOT_TOKEN")
     if not slack_bot_token:

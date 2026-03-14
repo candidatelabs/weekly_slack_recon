@@ -20,7 +20,7 @@ Pipeline reconciliation dashboard for tracking candidates across Slack, Ashby, G
 | `logic.py` | `build_candidate_submissions()` — LinkedIn extraction, status inference |
 | `status_rules.py` | Emoji/keyword classification rules for CLOSED / IN PROCESS |
 | `reporting.py` | JSON + Markdown output writers (`write_json`, `write_markdown`) |
-| `ashby_importer.py` | Ashby JSON export → unified schema, DK-only filter |
+| `ashby_importer.py` | Ashby extraction via Railway API + JSON normalization, DK-only filter |
 | `calendar_client.py` | Google Calendar API — searches `"{first name} x {client name}"` events |
 | `gmail_client.py` | Gmail API — search emails by candidate + inferred client domain |
 | `google_auth_helper.py` | Shared Google OAuth2 flow (browser auth on first use, then cached) |
@@ -41,11 +41,29 @@ Pipeline reconciliation dashboard for tracking candidates across Slack, Ashby, G
 5. Import Ashby candidates and merge into JSON
 6. Dashboard reads JSON on load
 
+## Data flow (Sync Ashby)
+
+1. Load session cookie from `.ashby-session.json` (project root)
+2. POST cookie to Railway API (`ashby-automation-production.up.railway.app/api/extract`)
+3. API returns all candidates; saved as dated JSON in `ASHBY_JSON_PATH` dir
+4. `load_ashby_export()` normalizes API response → unified submission format
+5. Filter to DK-credited candidates only (`_is_dk_credited`)
+6. `merge_ashby_into_submissions()` merges into existing Slack data
+7. If session expired (401), dashboard shows re-auth banner
+
+Key functions in `ashby_importer.py`:
+- `extract_from_api(cookie)` — calls Railway API, returns raw candidates
+- `extract_and_save(cookie, output_dir)` — extract + save JSON to disk
+- `save_ashby_cookie()` / `load_ashby_cookie()` — cookie persistence
+- `load_ashby_export()` — auto-detects new API format (snake_case) vs legacy format (camelCase)
+- `_is_dk_credited()` — matches: david, dk, david kimball, david cl, dkimball, dkimball@candidatelabs.com
+
 ## Key patterns
 
 - **Channel names**: `candidatelabs-{client-name}` (e.g. `candidatelabs-sequence-holdings` → "Sequence Holdings")
 - **Calendar matching**: `CalendarClient.search_events(first_name, client_name)` — matches events titled `"{first name} x {client name}"`
 - **Status inference**: Emoji reactions (✅ = in process, ⛔ = closed) + thread keywords (see `status_rules.py`)
+- **Ashby extraction**: Railway API at `ashby-automation-production.up.railway.app/api/extract` — replaces the old local Node.js subprocess
 - **Lookback window**: `LOOKBACK_DAYS` env var, default 60 days
 
 ## Config

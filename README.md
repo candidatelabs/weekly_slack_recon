@@ -9,7 +9,7 @@ A single-pane-of-glass tool for tracking all active candidates — across **Slac
 | Source | What it tracks |
 |--------|---------------|
 | **Slack** | DK's top-level messages in `candidatelabs-*` channels that contain a LinkedIn URL. Status inferred from emoji reactions and thread keywords. |
-| **Ashby** | Candidates credited to DK in the Ashby ATS. Extracted via the Ashby Automation tool and merged automatically. Only DK-credited records (`David`, `David Kimball`, `David CL`, `DK`) are imported. |
+| **Ashby** | Candidates credited to DK in the Ashby ATS. Extracted via the Railway-hosted Ashby Pipeline API and merged automatically. Only DK-credited records (`David`, `David Kimball`, `David CL`, `DK`, `dkimball`, `dkimball@candidatelabs.com`) are imported. |
 | **Gmail** | Emails where DK is in To or CC, searched by candidate name. Used by the Check-Ins agent to detect advancement, scheduling, and rejection signals. |
 | **Google Calendar** | DK's primary calendar, searched for events matching `"{candidate} x {client}"`. A scheduled interview is the highest-confidence status signal. |
 
@@ -37,8 +37,6 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Also requires **Node.js** and the Ashby Automation tool at `~/Desktop/Ashby automation/` (separate project).
-
 ### 2. `.env` file
 
 ```env
@@ -58,7 +56,7 @@ INACTIVITY_DAYS=5
 # Anthropic API key for AI enrichment + Check-Ins
 ANTHROPIC_API_KEY=
 
-# Path to Ashby JSON export directory
+# Path to directory for Ashby JSON exports (API results are saved here)
 ASHBY_JSON_PATH=
 
 # Pipeline Status Check (Check-Ins tab)
@@ -155,23 +153,20 @@ If Slack or email contains language like "comp mismatch", "keeping warm", or "ta
 
 ## Ashby integration
 
-Ashby data is extracted via the **Ashby Automation** tool at `~/Desktop/Ashby automation/`.
+Ashby data is extracted via the **Railway-hosted Ashby Pipeline API** (`ashby-automation-production.up.railway.app/api/extract`). No local Node.js tooling required.
 
 **Sync Ashby button:**
-1. Runs `node src/cli.ts extract` to generate a fresh JSON export
-2. Imports DK-only candidates and merges into the dashboard
-3. If session expired → re-auth banner appears inline in the dashboard
+1. Sends the saved session cookie to the Railway API
+2. API extracts all candidates across orgs and returns them as JSON
+3. Results are saved as a dated file in `ASHBY_JSON_PATH` and filtered to DK-only candidates
+4. Merged into the dashboard
+5. If session expired (401) → re-auth banner appears inline
 
 **Re-authenticating when session expires:**
 
-The dashboard offers two methods when the Ashby session cookie expires:
+Copy `ashby_session_token` from DevTools → Application → Cookies → `app.ashbyhq.com`, and paste it into the banner. The dashboard auto-detects whether you pasted a bare token value or a full cookie header — either format works. Cookies expire quickly, so run sync immediately after pasting.
 
-1. **Open Ashby Login** (recommended) — click the button in the banner to launch a Playwright browser window. Log in via Google SSO, then close the window. The session is saved automatically. Click "Sync Ashby" after.
-2. **Manual cookie paste** (fallback) — expand the manual section, copy `ashby_session_token` from DevTools → Application → Cookies → `app.ashbyhq.com`, and paste it in. Note: cookies expire quickly, so run sync immediately after pasting.
-
-> The dashboard auto-detects whether you pasted a bare token value or a full cookie header — either format works.
-
-**DK filter:** Only candidates where `creditedTo` is `David`, `David Kimball`, `David CL`, or `DK` are imported.
+**DK filter:** Only candidates where `credited_to` matches `David`, `David Kimball`, `David CL`, `DK`, `dkimball`, or `dkimball@candidatelabs.com` (case-insensitive) are imported.
 
 ---
 
@@ -270,7 +265,7 @@ weekly_slack_recon/
     ├── logic.py                # LinkedIn extraction, status inference
     ├── status_rules.py         # Emoji/keyword classification rules
     ├── reporting.py            # JSON/Markdown output writers
-    ├── ashby_importer.py       # Ashby JSON → unified schema, DK filter
+    ├── ashby_importer.py       # Ashby Railway API extraction + JSON normalization, DK filter
     ├── context_gatherer.py     # Gathers Slack thread context for LLM
     ├── enrichment.py           # Claude-powered candidate summaries
     ├── nudge.py                # Auto-nudge for stale submissions
@@ -302,7 +297,7 @@ weekly_slack_recon/
 | GET | `/api/ashby/sync/status` | Poll Ashby sync progress |
 | POST | `/api/ashby/import` | Import existing Ashby JSON (no extraction) |
 | POST | `/api/ashby/set-cookie` | Save session cookie, re-extract, re-import |
-| POST | `/api/ashby/login` | Launch Playwright browser for Ashby SSO login |
+| POST | `/api/ashby/login` | _(deprecated — returns info message)_ |
 | POST | `/api/status-check/generate` | Start Check-Ins pipeline (background) |
 | GET | `/api/status-check/status` | Poll Check-Ins pipeline progress |
 | GET | `/api/status-check/drafts` | Fetch all drafted messages |
