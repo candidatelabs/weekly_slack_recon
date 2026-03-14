@@ -143,9 +143,10 @@ def compose_candidate_message(first_name: str, opportunities: list[dict]) -> str
     Build the pre-populated candidate check-in email body.
 
     Status mapping:
-        CLOSED             → "no longer moving forward"
-        Active + stage     → stage name
-        Active, no stage   → "in process"
+        CLOSED                   → "no longer moving forward"
+        Active + stage           → stage name
+        Active, unclear status   → "pending feedback"
+        Active, no stage         → "in process"
 
     Args:
         first_name:     Candidate's first name.
@@ -161,6 +162,8 @@ def compose_candidate_message(first_name: str, opportunities: list[dict]) -> str
             detail = "no longer moving forward"
         elif opp.get("stage"):
             detail = opp["stage"]
+        elif "unclear" in (opp.get("status") or "").lower():
+            detail = "pending feedback"
         else:
             detail = "in process"
         bullets.append(f"• {company} — {detail}")
@@ -278,7 +281,8 @@ def send_email_via_gmail(
     creds = get_credentials(credentials_path, send_token_path, [_GMAIL_SEND_SCOPE])
     service = build("gmail", "v1", credentials=creds, cache_discovery=False)
 
-    mime_msg = MIMEText(body, "plain")
+    content_type = "html" if "<a " in body or "<br" in body else "plain"
+    mime_msg = MIMEText(body, content_type)
     mime_msg["to"] = to
     mime_msg["subject"] = subject
     raw = base64.urlsafe_b64encode(mime_msg.as_bytes()).decode()

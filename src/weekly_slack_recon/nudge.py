@@ -280,6 +280,7 @@ def run_nudge_check(
 
         if needing_nudge:
             _send_nudge_summary_dm(slack, dk_user_id, needing_nudge)
+            _send_nudge_summary_email(cfg, needing_nudge, slack)
     else:
         # Full mode: post thread replies + DM summary
         nudged_submissions = []
@@ -287,11 +288,12 @@ def run_nudge_check(
             if send_nudge(slack, cfg, sub, tracker, dk_user_id):
                 results["nudges_sent"] += 1
                 nudged_submissions.append(sub)
-        
+
         # Send DM summary with links to all nudged threads
         if nudged_submissions:
             _send_nudge_summary_dm(slack, dk_user_id, nudged_submissions)
-    
+            _send_nudge_summary_email(cfg, nudged_submissions, slack)
+
     # Clean up old tracker records
     removed = tracker.clear_old_records(days=cfg.lookback_days)
     if removed:
@@ -329,3 +331,39 @@ def _send_nudge_summary_dm(
         print(f"[INFO] Sent DM summary with {len(submissions)} nudge links", flush=True)
     else:
         print("[WARNING] Failed to send DM summary", flush=True)
+
+
+def _send_nudge_summary_email(
+    cfg: Config,
+    submissions: List[CandidateSubmission],
+    slack: SlackAPI,
+) -> None:
+    """Email the nudge summary to DK via Gmail, with hyperlinked Slack threads."""
+    from .candidate_outreach import send_email_via_gmail
+
+    domain = slack.get_workspace_domain()
+
+    lines = [f"<b>Nudge Summary:</b> {len(submissions)} candidates need follow-up<br><br>"]
+    for sub in submissions:
+        thread_ts_for_url = sub.submitted_at.timestamp()
+        ts_str = f"{thread_ts_for_url:.6f}".replace(".", "")
+        thread_url = f"https://{domain}/archives/{sub.channel_id}/p{ts_str}"
+        lines.append(
+            f'• <a href="{thread_url}">{sub.candidate_name}</a>'
+            f" in #{sub.channel_name} ({sub.days_since_submission} days)<br>"
+        )
+
+    subject = f"Nudge Summary — {len(submissions)} candidates need follow-up"
+    body = "\n".join(lines)
+
+    try:
+        send_email_via_gmail(
+            to=cfg.dk_email,
+            subject=subject,
+            body=body,
+            credentials_path=cfg.gmail_credentials_path,
+            token_path=cfg.gmail_token_path,
+        )
+        print(f"[INFO] Sent nudge summary email to {cfg.dk_email}", flush=True)
+    except Exception as e:
+        print(f"[WARNING] Failed to send nudge email: {e}", flush=True)

@@ -30,7 +30,7 @@ Pipeline reconciliation dashboard for tracking candidates across Slack, Ashby, G
 | `message_composer.py` | Claude-powered check-in message drafting |
 | `status_check_runner.py` | Check-Ins tab orchestrator |
 | `candidate_outreach.py` | Candidate email outreach: lookup, compose, Gmail send |
-| `nudge.py` | Auto-nudge for stale submissions |
+| `nudge.py` | Auto-nudge for stale submissions (Slack DM + email to DK) |
 
 ## Data flow (Sync Slack)
 
@@ -81,6 +81,15 @@ GCAL_LOOKBACK_DAYS / GCAL_LOOKAHEAD_DAYS  # Calendar search window
 ## Never commit
 
 `.env`, `credentials.json`, `*_token.json`, `.ashby-session.json`
+
+## Daily nudge cron job
+
+A macOS `launchd` agent runs the nudge check weekdays at 8:00 AM:
+- **Plist**: `~/Library/LaunchAgents/com.candidatelabs.nudge-check.plist`
+- **Logs**: `./logs/nudge-check.log`
+- **What it does**: Scans for stale submissions (IN PROCESS — unclear, no ✅/⛔ for 3+ days), sends Slack DM + HTML email with hyperlinked Slack threads to `dkimball@candidatelabs.com`
+- **Manual run**: `PYTHONPATH=src python -m weekly_slack_recon.realtime_monitor --dm-only`
+- **Manage**: `launchctl load/unload ~/Library/LaunchAgents/com.candidatelabs.nudge-check.plist`
 
 ## Run locally
 

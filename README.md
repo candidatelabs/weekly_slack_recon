@@ -276,7 +276,9 @@ weekly_slack_recon/
     ├── status_synthesizer.py   # Claude-powered per-candidate status reasoning (Ashby-first priority)
     ├── message_composer.py     # Claude-powered check-in message drafting (formats synthesized one-liners)
     ├── status_check_runner.py  # Check-Ins orchestrator
-    └── candidate_outreach.py   # Candidate email outreach: opportunity lookup, message compose, Gmail send
+    ├── candidate_outreach.py   # Candidate email outreach: opportunity lookup, message compose, Gmail send (supports HTML)
+    ├── realtime_monitor.py     # Nudge CLI entry point — schedulable via cron/launchd
+    └── nudge.py                # Auto-nudge for stale submissions (Slack DM + email)
 ```
 
 ### API endpoints
@@ -320,3 +322,37 @@ python serve_dashboard.py
 ```
 
 Or double-click `Slack Reconciliation.app` on the Desktop.
+
+---
+
+## Daily nudge check (auto-scheduled)
+
+A macOS `launchd` agent runs every weekday at 8:00 AM to identify stale candidate submissions and notify DK via **Slack DM** and **email**.
+
+**What gets flagged:** Submissions with status `IN PROCESS — unclear` (no ✅ or ⛔ reaction) that have been sitting for 3+ days without follow-up.
+
+**Notifications include:**
+- Slack DM with clickable thread links
+- HTML email to `dkimball@candidatelabs.com` with hyperlinked candidate names pointing to Slack threads
+
+**Manage the schedule:**
+```bash
+# View status
+launchctl list | grep candidatelabs
+
+# Stop
+launchctl unload ~/Library/LaunchAgents/com.candidatelabs.nudge-check.plist
+
+# Restart
+launchctl load ~/Library/LaunchAgents/com.candidatelabs.nudge-check.plist
+
+# Run manually
+cd /Users/david/Desktop/weekly_slack_recon
+source .venv/bin/activate
+python -m weekly_slack_recon.realtime_monitor --dm-only
+
+# Dry run (preview only)
+python -m weekly_slack_recon.realtime_monitor --dm-only --dry-run
+```
+
+**Logs:** `./logs/nudge-check.log`
