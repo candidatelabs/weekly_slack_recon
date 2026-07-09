@@ -2171,7 +2171,7 @@
                         candidateHtml += `<span class="source-badge source-badge-ashby" title="From Ashby ATS">Ashby</span>`;
                     }
                     if (submission.also_in_ashby) {
-                        candidateHtml += `<span class="source-badge source-badge-crosslink" title="Also found in Ashby">+Ashby</span>`;
+                        candidateHtml += `<span class="source-badge source-badge-crosslink" title="Merged with Ashby record">+Ashby</span>`;
                     }
                     if (submission.also_in_slack) {
                         candidateHtml += `<span class="source-badge source-badge-crosslink" title="Also found in Slack">+Slack</span>`;
@@ -2212,6 +2212,17 @@
                         actionCell = submission.slack_url
                             ? `<a href="#" onclick="openThreadPanel('${escapeAttr(submission.channel_id)}', '${escapeAttr(submission.slack_url)}', '${escapeAttr(submission.candidate_name)}', '${escapeAttr(submission.channel_name || '')}'); return false;">View Thread</a>`
                             : '—';
+                        // Merged rows (Slack base + Ashby data) also show the Ashby stage
+                        if (submission.pipeline_stage) {
+                            const progress = submission.stage_progress
+                                ? `<span class="stage-progress">(${escapeHtml(submission.stage_progress)})</span>`
+                                : '';
+                            const stageText = `${escapeHtml(submission.pipeline_stage)}${progress ? ' ' + progress : ''}`;
+                            const stageHtml = submission.ashby_candidate_id
+                                ? `<a href="https://app.ashbyhq.com/candidates/${escapeHtml(submission.ashby_candidate_id)}" target="_blank" class="stage-info">${stageText}</a>`
+                                : `<span class="stage-info">${stageText}</span>`;
+                            actionCell += ` · ${stageHtml}`;
+                        }
                     }
 
                     // ── Days cell ──────────────────────────────────────────
@@ -2225,7 +2236,7 @@
                         <td>${candidateHtml}</td>
                         <td>${sourceCell}</td>
                         <td>
-                            <span class="status-badge ${statusClass}">${escapeHtml(submission.status)}</span>
+                            <span class="status-badge ${statusClass}"${submission.slack_status ? ` title="Slack status: ${escapeHtml(submission.slack_status)}"` : ''}>${escapeHtml(submission.status)}</span>
                             ${submission.needs_followup ? '<span class="status-badge followup-badge">Follow-up</span>' : ''}
                         </td>
                         <td class="ai-status-cell">${aiCell}</td>

@@ -6,6 +6,7 @@ Slack Recon dashboard.
 from __future__ import annotations
 
 import json
+import re
 import urllib.request
 import urllib.error
 from datetime import datetime, timezone
@@ -306,6 +307,109 @@ def _normalize_legacy_candidates(data: Dict[str, Any]) -> List[Dict[str, Any]]:
     return normalized
 
 
+def _normalize_url(url: Optional[str]) -> str:
+    if not url:
+        return ""
+    return url.strip().rstrip("/").lower()
+
+
+def _normalize_name_key(name: Optional[str]) -> str:
+    """
+    Reduce a candidate name to a "first last" matching key so that middle
+    names don't block a match ("Manoj Kumar Panguluru" == "Manoj Panguluru").
+    """
+    if not name:
+        return ""
+    cleaned = re.sub(r"[^a-z0-9\s]", " ", name.lower())
+    tokens = cleaned.split()
+    if not tokens:
+        return ""
+    if len(tokens) == 1:
+        return tokens[0]
+    return f"{tokens[0]} {tokens[-1]}"
+
+
+def _channel_company_key(channel_name: Optional[str]) -> str:
+    """
+    Reduce a Slack channel name to lowercase client-name tokens:
+    "candidatelabs-langchain-eng" -> "langchain eng".
+
+    Mirrors _channel_to_client_name in status_check_runner.py (which imports
+    this module, so it can't be reused here without a circular import).
+    """
+    if not channel_name:
+        return ""
+    name = channel_name.lstrip("#").lower()
+    name = re.sub(r"^candidatelabs-?", "", name)
+    name = re.sub(r"-(fwd|forward|submissions)$", "", name)
+    return " ".join(name.replace("-", " ").split())
+
+
+def _company_key(company_name: Optional[str]) -> str:
+    """Normalize an Ashby company name to lowercase tokens for matching."""
+    if not company_name:
+        return ""
+    cleaned = re.sub(r"[^a-z0-9\s]", " ", company_name.lower().replace("-", " "))
+    return " ".join(cleaned.split())
+
+
+# Minimum length before a compact (space-stripped) prefix match is allowed,
+# so "Lang" can't swallow "langchain eng". Mirrors the frontend's MIN_FUZZY_LEN.
+_MIN_COMPACT_LEN = 5
+
+
+def _company_matches(channel_name: Optional[str], company_name: Optional[str]) -> bool:
+    """
+    True when the Slack channel and the Ashby company refer to the same client.
+    Token-prefix match in either direction: company "Langchain" matches channel
+    tokens ["langchain", "eng"], but "Lang" does not (whole tokens only).
+    Falls back to comparing space-stripped forms so spacing variants match
+    ("Preference Model" vs channel "candidatelabs-preferencemodel").
+    """
+    chan_tokens = _channel_company_key(channel_name).split()
+    comp_tokens = _company_key(company_name).split()
+    if not chan_tokens or not comp_tokens:
+        return False
+    if (
+        chan_tokens[: len(comp_tokens)] == comp_tokens
+        or comp_tokens[: len(chan_tokens)] == chan_tokens
+    ):
+        return True
+    chan_compact = "".join(chan_tokens)
+    comp_compact = "".join(comp_tokens)
+    if chan_compact == comp_compact:
+        return True
+    if min(len(chan_compact), len(comp_compact)) < _MIN_COMPACT_LEN:
+        return False
+    return chan_compact.startswith(comp_compact) or comp_compact.startswith(chan_compact)
+
+
+# Ashby fields grafted onto a Slack record when the two sources merge.
+ASHBY_MERGE_FIELDS = (
+    "company_name", "job_title", "pipeline_stage", "stage_progress",
+    "days_in_stage", "needs_scheduling", "latest_recommendation",
+    "latest_feedback_author", "ashby_application_id", "ashby_candidate_id",
+    "credited_to", "decision_status", "latest_feedback_date",
+    "current_stage_date", "current_stage_interviews",
+    "current_stage_avg_score", "interview_history_summary", "interview_events",
+)
+
+
+def _apply_ashby_to_slack(slack_rec: Dict[str, Any], ashby_rec: Dict[str, Any]) -> None:
+    """
+    Graft Ashby pipeline data onto a Slack submission (the Slack record stays
+    the base row: name, LinkedIn, channel, thread link, submitted_at all kept).
+    The original Slack status is preserved in `slack_status`; the visible
+    `status` becomes the Ashby one (pipeline truth wins, same vocabulary).
+    """
+    slack_rec["slack_status"] = slack_rec.get("status")
+    slack_rec["status"] = ashby_rec.get("status")
+    slack_rec["email"] = slack_rec.get("email") or ashby_rec.get("email")
+    for field in ASHBY_MERGE_FIELDS:
+        slack_rec[field] = ashby_rec.get(field)
+    slack_rec["also_in_ashby"] = True
+
+
 def merge_ashby_into_submissions(
     existing: List[Dict[str, Any]],
     ashby_candidates: List[Dict[str, Any]],
@@ -314,45 +418,69 @@ def merge_ashby_into_submissions(
     Merge Ashby candidates into an existing submissions list.
 
     - Removes any previously imported Ashby candidates (clean re-import)
-    - Appends the new Ashby candidates
-    - Flags Slack candidates whose LinkedIn URL also appears in Ashby (and vice-versa)
-      so the dashboard can show a cross-source badge
+    - Matches Ashby candidates to Slack submissions by LinkedIn URL, or by
+      normalized name + company (channel name vs Ashby company)
+    - Matched pairs collapse into a single row: the Slack record grafted with
+      the Ashby pipeline fields (see _apply_ashby_to_slack)
+    - Unmatched Ashby candidates are appended as their own rows
+
+    Idempotent: merged rows keep their Slack `source`, so on re-entry they are
+    reset (Ashby fields stripped, Slack status restored) and re-merged fresh.
     """
-
-    def _normalize_url(url: Optional[str]) -> str:
-        if not url:
-            return ""
-        return url.strip().rstrip("/").lower()
-
-    # Build LinkedIn URL sets for each source
-    ashby_urls = {
-        _normalize_url(c.get("linkedin_url"))
-        for c in ashby_candidates
-        if c.get("linkedin_url")
-    }
-
     # Keep only Slack candidates (drop any stale Ashby imports)
     slack_candidates = [
         s for s in existing if s.get("source", "slack") != "ashby"
     ]
 
-    slack_urls = {
-        _normalize_url(s.get("linkedin_url"))
-        for s in slack_candidates
-        if s.get("linkedin_url")
-    }
+    # Reset pass: strip any previously merged Ashby data so re-runs refresh
+    # instead of stacking, and candidates archived out of Ashby revert cleanly.
+    for s in slack_candidates:
+        if "slack_status" in s:
+            s["status"] = s.pop("slack_status")
+        for field in ASHBY_MERGE_FIELDS:
+            s.pop(field, None)
+        s["also_in_ashby"] = False
 
-    # Mark Slack candidates that also appear in Ashby
+    # Index Slack rows for matching
+    by_linkedin: Dict[str, Dict[str, Any]] = {}
+    by_name_key: Dict[str, List[Dict[str, Any]]] = {}
     for s in slack_candidates:
         url = _normalize_url(s.get("linkedin_url"))
-        s["also_in_ashby"] = bool(url and url in ashby_urls)
+        if url:
+            by_linkedin[url] = s
+        name_key = _normalize_name_key(s.get("candidate_name"))
+        if name_key:
+            by_name_key.setdefault(name_key, []).append(s)
 
-    # Mark Ashby candidates that also appear in Slack
+    consumed: set = set()
+    unmatched_ashby: List[Dict[str, Any]] = []
+
     for c in ashby_candidates:
-        url = _normalize_url(c.get("linkedin_url"))
-        c["also_in_slack"] = bool(url and url in slack_urls)
+        target: Optional[Dict[str, Any]] = None
 
-    return slack_candidates + ashby_candidates
+        # LinkedIn match first (exact; available in legacy exports)
+        url = _normalize_url(c.get("linkedin_url"))
+        if url and url in by_linkedin and id(by_linkedin[url]) not in consumed:
+            target = by_linkedin[url]
+        else:
+            # Name + company match (both must hold)
+            name_key = _normalize_name_key(c.get("candidate_name"))
+            matches = [
+                s for s in by_name_key.get(name_key, [])
+                if id(s) not in consumed
+                and _company_matches(s.get("channel_name"), c.get("company_name"))
+            ]
+            if matches:
+                target = max(matches, key=lambda s: s.get("submitted_at") or "")
+
+        if target is not None:
+            consumed.add(id(target))
+            _apply_ashby_to_slack(target, c)
+        else:
+            c["also_in_slack"] = False
+            unmatched_ashby.append(c)
+
+    return slack_candidates + unmatched_ashby
 
 
 def _map_ashby_status_api(candidate: Dict[str, Any]) -> str:

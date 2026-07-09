@@ -168,6 +168,29 @@ Copy `ashby_session_token` from DevTools → Application → Cookies → `app.as
 
 **DK filter:** Only candidates where `credited_to` matches `David`, `David Kimball`, `David CL`, `DK`, `dkimball`, or `dkimball@candidatelabs.com` (case-insensitive) are imported.
 
+### Slack ↔ Ashby dedupe
+
+A candidate who was submitted via Slack **and** exists in Ashby appears as **one merged row**, not two. During each Ashby sync, `merge_ashby_into_submissions()` matches candidates by:
+
+1. **LinkedIn URL** (exact, normalized) — when both sides have one (legacy exports only; the Railway API doesn't return LinkedIn URLs)
+2. **Name + company** — names are reduced to a middle-name-tolerant `"first last"` key ("Manoj Kumar Panguluru" ≡ "Manoj Panguluru"), and the Slack channel is matched against the Ashby company at the token level, including spacing variants (`candidatelabs-preferencemodel` ≡ "Preference Model"). Both name **and** company must match — same name at a different company never merges.
+
+Merged rows keep the Slack record as the base (name, LinkedIn, channel, thread link) and graft on the Ashby pipeline fields (stage, progress, interview data). The visible status becomes the Ashby one; the original Slack status is preserved in `slack_status` and shown as a hover tooltip on the status badge. Merged rows show a **+Ashby** badge, and their action cell shows both the Slack thread link and the Ashby stage.
+
+The merge is idempotent: re-syncing refreshes the Ashby fields in place, and a candidate who disappears from Ashby (archived) reverts to their Slack status automatically.
+
+---
+
+## Tests
+
+```bash
+source .venv/bin/activate
+pip install pytest   # first time only
+python -m pytest tests/
+```
+
+Covers the Slack↔Ashby matcher: name variants, company/channel mapping, false-positive guards, idempotency, and Ashby-disappearance rollback.
+
 ---
 
 ## Dashboard features

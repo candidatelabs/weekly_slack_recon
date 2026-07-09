@@ -48,7 +48,7 @@ Pipeline reconciliation dashboard for tracking candidates across Slack, Ashby, G
 3. API returns all candidates; saved as dated JSON in `ASHBY_JSON_PATH` dir
 4. `load_ashby_export()` normalizes API response → unified submission format
 5. Filter to DK-credited candidates only (`_is_dk_credited`)
-6. `merge_ashby_into_submissions()` merges into existing Slack data
+6. `merge_ashby_into_submissions()` merges into existing Slack data (see dedupe below)
 7. If session expired (401), dashboard shows re-auth banner
 
 Key functions in `ashby_importer.py`:
@@ -57,6 +57,21 @@ Key functions in `ashby_importer.py`:
 - `save_ashby_cookie()` / `load_ashby_cookie()` — cookie persistence
 - `load_ashby_export()` — auto-detects new API format (snake_case) vs legacy format (camelCase)
 - `_is_dk_credited()` — matches: david, dk, david kimball, david cl, dkimball, dkimball@candidatelabs.com
+
+## Slack ↔ Ashby dedupe (`merge_ashby_into_submissions`)
+
+A candidate in both Slack and Ashby collapses into **one row** — the Slack record is the base, Ashby pipeline fields (`ASHBY_MERGE_FIELDS`) are grafted on. All logic lives in `ashby_importer.py`; the merge runs at every call site in `serve_dashboard.py` unchanged.
+
+- **Match order**: LinkedIn URL first (exact; only legacy exports have it — the Railway API returns `linkedin_url: None`, hardcoded upstream too), then name + company. Both name **and** company must match.
+- **Name matching**: `_normalize_name_key()` reduces to `"first last"` so middle names don't block ("Manoj Kumar Panguluru" ≡ "Manoj Panguluru").
+- **Company matching**: `_company_matches()` compares the channel remainder (`candidatelabs-langchain-eng` → `langchain eng`) against the Ashby company name — token-prefix in either direction, plus a space-stripped fallback for spacing variants (`preferencemodel` ≡ "Preference Model", min 5 chars so "Lang" can't match).
+- **Merged row shape**: Slack `source` kept (never `"ashby"` — that gets dropped on re-merge and blocks dashboard selection); `status` = Ashby status; original Slack status preserved in `slack_status`; `also_in_ashby: True` drives the "+Ashby" badge.
+- **Idempotent**: every run starts with a reset pass (restore `status` from `slack_status`, strip `ASHBY_MERGE_FIELDS`), so re-syncs refresh in place and a candidate archived out of Ashby reverts to their Slack status.
+- Unmatched Ashby candidates append as their own `source: "ashby"` rows, as before.
+
+Known accepted risk: two different people with identical first+last name at the same company would wrongly merge (LinkedIn match takes precedence when available).
+
+Note: the separate **recruitment_coordinator_agent** project (`~/Documents/recruitment_coordinator_agent`) consumes `weekly_slack_reconciliation.json` and does its own Slack/Ashby merging in `useMergedPipeline.ts` — dedupe fixes usually need to land in both places.
 
 ## Key patterns
 
@@ -89,3 +104,12 @@ source .venv/bin/activate
 python serve_dashboard.py
 # Opens http://localhost:8001/dashboard.html
 ```
+
+## Tests
+
+```bash
+source .venv/bin/activate
+python -m pytest tests/   # pip install pytest first time
+```
+
+`tests/test_ashby_merge.py` covers the Slack↔Ashby dedupe matcher (`tests/conftest.py` puts `src/` on the path).
