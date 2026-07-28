@@ -89,7 +89,10 @@ class SlackAPI:
 
             for ch in resp.get("channels", []):
                 name = ch.get("name", "")
-                if name.startswith("candidatelabs-"):
+                # Slack Connect channels created on the CLIENT's side get an
+                # "ext-" prefix locally (e.g. ext-candidatelabs-prometheus-
+                # engineering) — same client channels, different creator.
+                if name.startswith("candidatelabs-") or name.startswith("ext-candidatelabs-"):
                     channels.append(ch)
 
             cursor = resp.get("response_metadata", {}).get("next_cursor") or None
